@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Webinse_OfflineStores>
+      <active>true</active>
+      <codePool>local</codePool>
+    </Webinse_OfflineStores>
+  </modules>
+</config>

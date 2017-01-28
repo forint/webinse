@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <Webinse_OfflineStores>
+            <version>1.0.0</version>
+        </Webinse_OfflineStores>
+    </modules>
+    <frontend>
+        <webinseofflinestores>
+            <use>standard</use>
+            <args>
+                <module>Webinse_OfflineStores</module>
+                <frontName>offlinestores</frontName>
+            </args>
+        </webinseofflinestores>
+    </frontend>
+    <global>
+        <!--<resources>
+            <webinseofflinestores_setup>
+                <setup>
+                    <module>Webinse_OfflineStores</module>
+                </setup>
+            </webinseofflinestores_setup>
+        </resources>-->
+        <models>
+            <offlinestores>
+                <class>Webinse_OfflineStores_Model</class>
+            </offlinestores>
+            <webinseofflinestores>
+                <class>Webinse_OfflineStores_Model</class>
+                <resourceModel>offlinestores_resource</resourceModel>
+            </webinseofflinestores>
+            <webinseofflinestores_resource>
+                <class>Webinse_OfflineStores_Model_Resource</class>
+                <entities>
+                    <table_offlinestores>
+                        <table>webinse_offlinestores</table>
+                    </table_offlinestores>
+                </entities>
+            </webinseofflinestores_resource>
+        </models>
+        <helpers>
+            <webinseofflinestores>
+                <class>Webinse_OfflineStores_Helper</class>
+            </webinseofflinestores>
+        </helpers>
+        <blocks>
+            <webinseofflinestores>
+                <class>Webinse_OfflineStores_Block</class>
+            </webinseofflinestores>
+        </blocks>
+        <events>
+            <controller_front_init_routers>
+                <observers>
+                    <webinseofflinestores>
+                        <class>Webinse_OfflineStores_Controller_Router</class>
+                        <method>initControllerRouters</method>
+                    </webinseofflinestores>
+                </observers>
+            </controller_front_init_routers>
+        </events>
+    </global>
+    <admin>
+        <routers>
+            <webinseofflinestores_admin>
+                <use>admin</use>
+                <args>
+                    <module>Webinse_OfflineStores</module>
+                    <frontName>webinseofflinestores_admin</frontName>
+                </args>
+            </webinseofflinestores_admin>
+        </routers>
+    </admin>
+    <adminhtml>
+        <menu>
+            <webinseofflinestores module="webinseofflinestores">
+                <title>Offline Stores</title>
+                <sort_order>88</sort_order>
+                <children translate="title" module="webinseofflinestores">
+                    <webinseofflinestores_add translate="title" module="webinseofflinestores"><!-- this is the submenu item -->
+                        <title>Add Offline Store</title>
+                        <action>webinseofflinestores_admin/adminhtml_offlinestores</action>
+                        <sort_order>10</sort_order>
+                    </webinseofflinestores_add>
+                    <webinseofflinestores_view translate="title" module="webinseofflinestores"><!-- this is the submenu item -->
+                        <title>View Offline Stores</title>
+                        <action>webinseofflinestores_admin/adminhtml_offlinestores</action>
+                        <sort_order>20</sort_order>
+                    </webinseofflinestores_view>
+                </children>
+            </webinseofflinestores>
+        </menu>
+        <translate>
+            <modules>
+                <Webinse_OfflineStores>
+                    <files>
+                        <default>Webinse_OfflineStores.csv</default>
+                    </files>
+                </Webinse_OfflineStores>
+            </modules>
+        </translate>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <adminhtml_offlinestores>
+                                            <title>News Module Section</title>
+                                        </adminhtml_offlinestores>
+                                        <adminhtml_view>
+                                            <title>News Categories Module Section</title>
+                                        </adminhtml_view>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+        <layout>
+            <updates>
+                <webinseofflinestores>
+                    <file>webinseofflinestores.xml</file>
+                </webinseofflinestores>
+            </updates>
+        </layout>
+    </adminhtml>
+</config>
