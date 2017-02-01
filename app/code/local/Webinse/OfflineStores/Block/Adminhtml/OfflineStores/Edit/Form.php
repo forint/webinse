@@ -5,7 +5,7 @@ class Webinse_Offlinestores_Block_Adminhtml_OfflineStores_Edit_Form extends Mage
     {
         parent::_construct();
         $this->setTemplate('offlinestores/widget/form.phtml');
-        $this->setDestElementId('offlinestores_edit_form');
+        $this->setDestElementId('edit_form');
         $this->setShowGlobalIcon(false);
     }
 
@@ -16,7 +16,7 @@ class Webinse_Offlinestores_Block_Adminhtml_OfflineStores_Edit_Form extends Mage
          * который обращается по данному айди
          */
         $form = new Varien_Data_Form(array(
-            'id'     => 'offlinestores_edit_form',
+            'id'     => 'edit_form',
             'action' => $this->getUrl('*/*/save', array('id'=>$this->getRequest()->getParam('id'))),
             'method' => 'post',
             'enctype'=> 'multipart/form-data'

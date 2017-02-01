@@ -40,7 +40,7 @@ class Webinse_OfflineStores_Block_Adminhtml_OfflineStores_Edit extends Mage_Admi
             return $this->escapeHtml(Mage::registry('offlinestore')->getName());
         }
         else {
-            return Mage::helper('customer')->__('New Customer');
+            return Mage::helper('webinseofflinestores')->__('Offline Store Information');
         }
     }
 
@@ -52,7 +52,6 @@ class Webinse_OfflineStores_Block_Adminhtml_OfflineStores_Edit extends Mage_Admi
     public function getFormHtml()
     {
         $html = parent::getFormHtml();
-        $html .= $this->getLayout()->createBlock('adminhtml/catalog_product_composite_configure')->toHtml();
         return $html;
     }
 

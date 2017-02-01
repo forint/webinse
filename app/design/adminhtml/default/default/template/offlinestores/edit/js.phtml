@@ -28,6 +28,8 @@
 function saveAndContinueEdit(urlTemplate) {
         var template = new Template(urlTemplate, /(^|.|\r|\n)({{(\w+)}})/);
         var url = template.evaluate({tab_id: offlinestores_info_tabsJsTabs.activeTab.id});
+
+        console.log('Start debug tab cheker');
         editForm.submit(url);
 }
 </script>
