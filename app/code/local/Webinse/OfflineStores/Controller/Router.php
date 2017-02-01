@@ -22,7 +22,7 @@ class Webinse_OfflineStores_Controller_Router extends Mage_Core_Controller_Varie
             if (count($cmd) == 1){
                 return $this->_fillRequest($request);
             }else{
-                $model = Mage::getModel('webinseofflinestores/offlinestores')->load($cmd[1],'link');
+                $model = Mage::getModel('webinseofflinestores/offlinestore')->load($cmd[1],'link');
                 if ($model->getId()){
                     $params = array(
                         'id' => $model->getId()

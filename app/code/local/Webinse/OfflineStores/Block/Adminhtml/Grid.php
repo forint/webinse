@@ -3,6 +3,7 @@ class Webinse_OfflineStores_Block_Adminhtml_Grid extends Mage_Adminhtml_Block_Wi
 {
     public function __construct()
     {
+        die('!!!!!');
         //indicate where we can find the controller
         $this->_controller = 'adminhtml_offlinestores';
         $this->_blockGroup = 'offlinestores';

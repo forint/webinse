@@ -1,122 +1,162 @@
 <?php
 $installer = $this;
-var_dump(get_class($installer));die;
-$tableOfflineStores = $installer->getTable('webinseofflinestores/webinse_offlinestores');
+$tableOfflineStores = $installer->getTable('webinseofflinestores/table_offlinestores');
 
 /**
- * Create table array('webinseofflinestores/webinse_offlinestores')
+ * Drop Offline Stores Entity Table and her Foreign Keys if exists
+ */
+if ( Mage::getSingleton('core/resource')->getConnection('core_write')->isTableExists($tableOfflineStores) ){
+    $installer->getConnection()->dropForeignKey( $tableOfflineStores, 'FK_WEBINSE_OFFLINESTORES_STORE_ID_CORE_STORE_STORE_ID' );
+    $installer->getConnection()->dropForeignKey( $tableOfflineStores, 'FK_WEBINSE_OFFLINESTORES_ENTT_TYPE_ID_EAV_ENTT_TYPE_ENTT_TYPE_ID' );
+    $installer->getConnection()->dropTable($tableOfflineStores);
+}
+
+/**
+ * Create all entity tables
+ */
+$installer->createEntityTables($tableOfflineStores);
+/**
+ * Create table 'webinseofflinestores/attribute_additional'
  */
 $table = $installer->getConnection()
-    ->newTable($tableOfflineStores)
-    ->addColumn('offlinestores_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
-        'identity'  => true,
-        'nullable'  => false,
-        'primary'   => true,
-    ), 'Offline Store ID')
-    ->addColumn('entity_type_id', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
-        'unsigned'  => true,
-        'nullable'  => false,
-        'default'   => '0',
-    ), 'Entity Type ID')
+    ->newTable($installer->getTable('webinseofflinestores/attribute_additional'))
     ->addColumn('attribute_id', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned'  => true,
         'nullable'  => false,
-        'default'   => '0',
+        'primary'   => true,
     ), 'Attribute ID')
-    ->addColumn('store_id', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+    ->addColumn('frontend_input_renderer', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
+    ), 'Frontend Input Renderer')
+    ->addColumn('is_global', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'unsigned'  => true,
+        'nullable'  => false,
+        'default'   => '1',
+    ), 'Is Global')
+    ->addColumn('is_visible', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'unsigned'  => true,
+        'nullable'  => false,
+        'default'   => '1',
+    ), 'Is Visible')
+    ->addColumn('is_searchable', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned'  => true,
         'nullable'  => false,
         'default'   => '0',
-    ), 'Store ID')
-    ->addColumn('entity_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+    ), 'Is Searchable')
+    ->addColumn('is_filterable', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned'  => true,
         'nullable'  => false,
         'default'   => '0',
-    ), 'Entity ID')
-    ->addColumn('value', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
-    ), 'Value')
-    ->addIndex(
-        $installer->getIdxName(
-            array('catalog/category', 'varchar'),
-            array('entity_type_id', 'entity_id', 'attribute_id', 'store_id'),
-            Varien_Db_Adapter_Interface::INDEX_TYPE_UNIQUE
-        ),
-        array('entity_type_id', 'entity_id', 'attribute_id', 'store_id'),
-        array('type' => Varien_Db_Adapter_Interface::INDEX_TYPE_UNIQUE))
-    ->addIndex($installer->getIdxName(array('catalog/category', 'varchar'), array('entity_id')),
-        array('entity_id'))
-    ->addIndex($installer->getIdxName(array('catalog/category', 'varchar'), array('attribute_id')),
-        array('attribute_id'))
-    ->addIndex($installer->getIdxName(array('catalog/category', 'varchar'), array('store_id')),
-        array('store_id'))
-    ->addForeignKey(
-        $installer->getFkName(array('catalog/category', 'varchar'), 'attribute_id', 'eav/attribute', 'attribute_id'),
-        'attribute_id', $installer->getTable('eav/attribute'), 'attribute_id',
-        Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE)
-    ->addForeignKey(
-        $installer->getFkName(array('catalog/category', 'varchar'), 'entity_id', 'catalog/category', 'entity_id'),
-        'entity_id', $installer->getTable('catalog/category'), 'entity_id',
-        Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE)
-    ->addForeignKey(
-        $installer->getFkName(array('catalog/category', 'varchar'), 'store_id', 'core/store', 'store_id'),
-        'store_id', $installer->getTable('core/store'), 'store_id',
-        Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE)
-    ->setComment('Catalog Category Varchar Attribute Backend Table');
-$installer->getConnection()->createTable($table);
-
-die;
-/*$installer->startSetup();
-$installer->getConnection()->dropTable($tableNews);
-
-$table = $installer->getConnection()->newTable($tableNews)
-->addColumn('offlinestore_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
-    'identity'  => true,
-    'nullable'  => false,
-    'primary'   => true,
-))->addColumn('title', Varien_Db_Ddl_Table::TYPE_TEXT, '255', array(
-    'nullable'  => false,
-))->addColumn('image', Varien_Db_Ddl_Table::TYPE_TEXT, '255', array(
-    'nullable'  => false,
-))->addColumn('short_description', Varien_Db_Ddl_Table::TYPE_TEXT, null, array(
-    'nullable'  => false,
-))->addColumn('created', Varien_Db_Ddl_Table::TYPE_DATETIME, null, array(
-    'nullable'  => false,
-));
-$installer->getConnection()->createTable($table);
-
-$installer->endSetup();*/
-
-
-/**
- * Create table 'catalog/category_product'
- */
-$table = $installer->getConnection()
-    ->newTable($installer->getTable('webinseofflinestores/webinse_offlinestores_product'))
-    ->addColumn('offlinestore_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+    ), 'Is Filterable')
+    ->addColumn('is_comparable', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned'  => true,
         'nullable'  => false,
-        'primary'   => true,
         'default'   => '0',
-    ), 'Offline Store ID')
-    ->addColumn('product_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+    ), 'Is Comparable')
+    ->addColumn('is_visible_on_front', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned'  => true,
         'nullable'  => false,
-        'primary'   => true,
         'default'   => '0',
-    ), 'Product ID')
+    ), 'Is Visible On Front')
+    ->addColumn('is_html_allowed_on_front', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'unsigned'  => true,
+        'nullable'  => false,
+        'default'   => '0',
+    ), 'Is HTML Allowed On Front')
+    ->addColumn('is_used_for_price_rules', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'unsigned'  => true,
+        'nullable'  => false,
+        'default'   => '0',
+    ), 'Is Used For Price Rules')
+    ->addColumn('is_filterable_in_search', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'unsigned'  => true,
+        'nullable'  => false,
+        'default'   => '0',
+    ), 'Is Filterable In Search')
+    ->addColumn('used_in_product_listing', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'unsigned'  => true,
+        'nullable'  => false,
+        'default'   => '0',
+    ), 'Is Used In Product Listing')
+    ->addColumn('used_for_sort_by', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'unsigned'  => true,
+        'nullable'  => false,
+        'default'   => '0',
+    ), 'Is Used For Sorting')
+    ->addColumn('is_configurable', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'unsigned'  => true,
+        'nullable'  => false,
+        'default'   => '1',
+    ), 'Is Configurable')
+    ->addColumn('apply_to', Varien_Db_Ddl_Table::TYPE_TEXT, 255, array(
+        'nullable'  => true,
+    ), 'Apply To')
+    ->addColumn('is_visible_in_advanced_search', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'unsigned'  => true,
+        'nullable'  => false,
+        'default'   => '0',
+    ), 'Is Visible In Advanced Search')
     ->addColumn('position', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'nullable'  => false,
         'default'   => '0',
     ), 'Position')
-    /*    ->addIndex($installer->getIdxName('catalog/category_product', array('category_id')),
-            array('category_id'))*/
-    ->addIndex($installer->getIdxName('catalog/category_product', array('product_id')),
-        array('product_id'))
-    ->addForeignKey($installer->getFkName('catalog/category_product', 'product_id', 'webinseofflinestores/webinse_offlinestores', 'offlinestore_id'),
-        'offlinestore_id', $installer->getTable('webinseofflinestores/webinse_offlinestores'), 'offlinestore_id',
+    ->addColumn('is_wysiwyg_enabled', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'unsigned'  => true,
+        'nullable'  => false,
+        'default'   => '0',
+    ), 'Is WYSIWYG Enabled')
+    ->addColumn('is_used_for_promo_rules', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'unsigned'  => true,
+        'nullable'  => false,
+        'default'   => '0',
+    ), 'Is Used For Promo Rules')
+    ->addIndex($installer->getIdxName('webinseofflinestores/attribute_additional', array('used_for_sort_by')),
+        array('used_for_sort_by'))
+    ->addIndex($installer->getIdxName('webinseofflinestores/attribute_additional', array('used_in_product_listing')),
+        array('used_in_product_listing'))
+    ->addForeignKey($installer->getFkName('webinseofflinestores/attribute_additional', 'attribute_id', 'eav/attribute', 'attribute_id'),
+        'attribute_id', $installer->getTable('eav/attribute'), 'attribute_id',
         Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE)
-    ->addForeignKey($installer->getFkName('catalog/category_product', 'product_id', 'catalog/product', 'entity_id'),
-        'product_id', $installer->getTable('catalog/product'), 'entity_id',
-        Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE)
-    ->setComment('Catalog Product To Category Linkage Table');
+    ->setComment('Catalog EAV Attribute Table');
 $installer->getConnection()->createTable($table);
+
+/**
+ * Create table 'customer/eav_attribute_website'
+ */
+$table = $installer->getConnection()
+    ->newTable($installer->getTable('webinseofflinestores/attribute_website'))
+    ->addColumn('attribute_id', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'unsigned'  => true,
+        'nullable'  => false,
+        'primary'   => true,
+    ), 'Attribute Id')
+    ->addColumn('website_id', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'unsigned'  => true,
+        'nullable'  => false,
+        'primary'   => true,
+    ), 'Website Id')
+    ->addColumn('is_visible', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'unsigned'  => true,
+    ), 'Is Visible')
+    ->addColumn('is_required', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'unsigned'  => true,
+    ), 'Is Required')
+    ->addColumn('default_value', Varien_Db_Ddl_Table::TYPE_TEXT, '64k', array(
+    ), 'Default Value')
+    ->addColumn('multiline_count', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
+        'unsigned'  => true,
+    ), 'Multiline Count')
+    ->addIndex($installer->getIdxName('webinseofflinestores/attribute_website', array('website_id')),
+        array('website_id'))
+    ->addForeignKey(
+        $installer->getFkName('webinseofflinestores/attribute_website', 'attribute_id', 'eav/attribute', 'attribute_id'),
+        'attribute_id', $installer->getTable('eav/attribute'), 'attribute_id',
+        Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE)
+    ->addForeignKey($installer->getFkName('webinseofflinestores/attribute_website', 'website_id', 'core/website', 'website_id'),
+        'website_id', $installer->getTable('core/website'), 'website_id',
+        Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE)
+    ->setComment('Customer Eav Attribute Website');
+$installer->getConnection()->createTable($table);
+
+$installer->installEntities();
+
+$installer->endSetup();

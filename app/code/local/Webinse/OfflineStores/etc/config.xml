@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Webinse_OfflineStores>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
         </Webinse_OfflineStores>
     </modules>
     <frontend>
@@ -15,20 +15,31 @@
         </webinseofflinestores>
     </frontend>
     <global>
-        <!--<resources>
+        <resources>
             <webinseofflinestores_setup>
                 <setup>
                     <module>Webinse_OfflineStores</module>
+                    <class>Webinse_OfflineStores_Model_Resource_Setup</class>
                 </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
             </webinseofflinestores_setup>
-        </resources>-->
+            <offlinestores_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </offlinestores_read>
+            <offlinestores_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </offlinestores_write>
+        </resources>
         <models>
-            <offlinestores>
-                <class>Webinse_OfflineStores_Model</class>
-            </offlinestores>
             <webinseofflinestores>
                 <class>Webinse_OfflineStores_Model</class>
-                <resourceModel>offlinestores_resource</resourceModel>
+                <resourceModel>webinseofflinestores_resource</resourceModel>
             </webinseofflinestores>
             <webinseofflinestores_resource>
                 <class>Webinse_OfflineStores_Model_Resource</class>
@@ -36,6 +47,15 @@
                     <table_offlinestores>
                         <table>webinse_offlinestores</table>
                     </table_offlinestores>
+                    <attribute_additional>
+                        <table>webinse_attribute</table>
+                    </attribute_additional>
+                    <offlinestores_product>
+                        <table>webinse_offlinestores_product</table>
+                    </offlinestores_product>
+                    <attribute_website>
+                        <table>webinse_attribute_website</table>
+                    </attribute_website>
                 </entities>
             </webinseofflinestores_resource>
         </models>
@@ -80,13 +100,18 @@
                     <webinseofflinestores_add translate="title" module="webinseofflinestores"><!-- this is the submenu item -->
                         <title>Add Offline Store</title>
                         <action>webinseofflinestores_admin/adminhtml_offlinestores</action>
-                        <sort_order>10</sort_order>
+                        <sort_order>20</sort_order>
                     </webinseofflinestores_add>
                     <webinseofflinestores_view translate="title" module="webinseofflinestores"><!-- this is the submenu item -->
                         <title>View Offline Stores</title>
                         <action>webinseofflinestores_admin/adminhtml_offlinestores</action>
-                        <sort_order>20</sort_order>
+                        <sort_order>10</sort_order>
                     </webinseofflinestores_view>
+                    <webinseofflinestores_preferences translate="title" module="webinseofflinestores"><!-- this is the submenu item -->
+                        <title>Settings</title>
+                        <action>webinseofflinestores_admin/adminhtml_preferences</action>
+                        <sort_order>30</sort_order>
+                    </webinseofflinestores_preferences>
                 </children>
             </webinseofflinestores>
         </menu>
@@ -108,11 +133,14 @@
                                 <config>
                                     <children>
                                         <adminhtml_offlinestores>
-                                            <title>News Module Section</title>
+                                            <title>Add Offline Store</title>
                                         </adminhtml_offlinestores>
                                         <adminhtml_view>
-                                            <title>News Categories Module Section</title>
+                                            <title>View Offline Stores</title>
                                         </adminhtml_view>
+                                        <adminhtml_preferences>
+                                            <title>Settings</title>
+                                        </adminhtml_preferences>
                                     </children>
                                 </config>
                             </children>
@@ -128,5 +156,15 @@
                 </webinseofflinestores>
             </updates>
         </layout>
+        <!--<events>
+            <adminhtml_widget_container_html_before>
+                <observers>
+                    <webinseofflinestores>
+                        <class>Webinse_OfflineStores_Model_Observer</class>
+                        <method>addButtonTest</method>
+                    </webinseofflinestores>
+                </observers>
+            </adminhtml_widget_container_html_before>
+        </events>-->
     </adminhtml>
 </config>

@@ -1,18 +1,14 @@
 <?php
-
-class Webinse_OfflineStores_Block_Adminhtml_Widget_Grid extends Mage_Adminhtml_Block_Widget_Grid
+class Webinse_OfflineStores_Block_Adminhtml_OfflineStores_Edit_Tab_Product_Grid extends Mage_Adminhtml_Block_Widget_Grid
 {
-
     public function __construct()
     {
         parent::__construct();
-        $this->setId('offlinestores_widget_grid');
-        $this->setDefaultSort('entity_id');
+        $this->setId('products');
+        $this->setDefaultSort('increment_id');
         $this->setDefaultDir('DESC');
         $this->setSaveParametersInSession(true);
         $this->setUseAjax(true);
-        $this->setVarNameFilter('offlinestores_filter');
-
     }
 
     protected function _getStore()
@@ -24,7 +20,6 @@ class Webinse_OfflineStores_Block_Adminhtml_Widget_Grid extends Mage_Adminhtml_B
     protected function _prepareCollection()
     {
         $store = $this->_getStore();
-        var_dump(get_class(Mage::getModel('catalog/product')));die;
         $collection = Mage::getModel('catalog/product')->getCollection()
             ->addAttributeToSelect('sku')
             ->addAttributeToSelect('name')

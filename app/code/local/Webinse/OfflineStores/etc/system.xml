@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+    <sections>
+        <offlinestores translate="label" module="webinseofflinestores">
+            <label>Offline Stores</label>
+            <tab>general</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>500</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <offlinestoresgroup translate="label" module="webinseofflinestores">
+                    <label>Offline Stores Preferences</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1000</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <offlinestoresperpage translate="label">
+                            <label>Count stores per page</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>( Numeric value )</comment>
+                        </offlinestoresperpage>
+                        <offlinestoreappearance translate="label">
+                            <label>Offline stores appearance</label>
+                            <sort_order>2</sort_order>
+                            <frontend_type>select</frontend_type>
+                            <source_model>webinseofflinestores/system_config_source_appearance</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <shared>1</shared>
+                        </offlinestoreappearance>
+                    </fields>
+                </offlinestoresgroup>
+            </groups>
+        </offlinestores>
+    </sections>
+</config>

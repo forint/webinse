@@ -59,4 +59,6 @@ class Webinse_OfflineStores_Block_Adminhtml_OfflineStores extends Mage_Adminhtml
         }
         return true;
     }
+
+
 }
