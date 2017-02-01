@@ -1,13 +1,20 @@
 <?php
-class Webinse_OfflineStores_Model_Resource_Offlinestore extends Mage_Eav_Model_Entity_Abstract // Mage_Core_Model_Mysql4_Abstract
+class Webinse_OfflineStores_Model_Resource_Offlinestore extends Mage_Eav_Model_Entity_Abstract
 {
+
     /**
-     * Initialize connection with regular data model
+     * Entity type configuration
+     *
+     * @var Mage_Eav_Model_Entity_Type
      */
-    /*public function _construct()
-    {
-        $this->_init('webinseofflinestores/offlinestore', 'offlinestore_id');
-    }*/
+    protected $_type;
+
+    /**
+     * Offline store products table name
+     *
+     * @var string
+     */
+    protected $_offlinestoreProductTable;
 
     /**
      * Initialize connection with eav data model
@@ -16,6 +23,7 @@ class Webinse_OfflineStores_Model_Resource_Offlinestore extends Mage_Eav_Model_E
     {
         $this->setType('offlinestore');
         $this->setConnection('offlinestores_read', 'offlinestores_write');
+        $this->_offlinestoreProductTable = $this->getTable('webinseofflinestores/offlinestores_product');
     }
 
 
@@ -44,49 +52,23 @@ class Webinse_OfflineStores_Model_Resource_Offlinestore extends Mage_Eav_Model_E
      * @throws Mage_Customer_Exception
      * @return Mage_Customer_Model_Resource_Customer
      */
-    protected function _beforeSave(Varien_Object $customer)
+    protected function _beforeSave(Varien_Object $offlineStore)
     {
-        parent::_beforeSave($customer);
+        parent::_beforeSave($offlineStore);
 
-        if (!$customer->getEmail()) {
-            throw Mage::exception('Mage_Customer', Mage::helper('customer')->__('Customer email is required'));
-        }
-
-        $adapter = $this->_getWriteAdapter();
-        $bind    = array('email' => $customer->getEmail());
-
-        $select = $adapter->select()
-            ->from($this->getEntityTable(), array($this->getEntityIdField()))
-            ->where('email = :email');
-        if ($customer->getSharingConfig()->isWebsiteScope()) {
-            $bind['website_id'] = (int)$customer->getWebsiteId();
-            $select->where('website_id = :website_id');
-        }
-        if ($customer->getId()) {
-            $bind['entity_id'] = (int)$customer->getId();
-            $select->where('entity_id != :entity_id');
-        }
-
-        $result = $adapter->fetchOne($select, $bind);
-        if ($result) {
-            throw Mage::exception(
-                'Mage_Customer', Mage::helper('customer')->__('This customer email already exists'),
-                Mage_Customer_Model_Customer::EXCEPTION_EMAIL_EXISTS
+        $offlineStore->setData('posiiton', $offlineStore->getData('disposition'));
+        /**
+         * Check if declared category ids in object data.
+         */
+        /*if ($object->hasCategoryIds()) {
+            $categoryIds = Mage::getResourceSingleton('catalog/category')->verifyIds(
+                $object->getCategoryIds()
             );
-        }
-
-        // set confirmation key logic
-        if ($customer->getForceConfirmed()) {
-            $customer->setConfirmation(null);
-        } elseif (!$customer->getId() && $customer->isConfirmationRequired()) {
-            $customer->setConfirmation($customer->getRandomConfirmationKey());
-        }
-        // remove customer confirmation key from database, if empty
-        if (!$customer->getConfirmation()) {
-            $customer->setConfirmation(null);
-        }
+            $object->setCategoryIds($categoryIds);
+        }*/
 
         return $this;
+
     }
 
     /**
@@ -97,7 +79,7 @@ class Webinse_OfflineStores_Model_Resource_Offlinestore extends Mage_Eav_Model_E
      */
     protected function _afterSave(Varien_Object $customer)
     {
-        $this->_saveAddresses($customer);
+        // $this->_saveAddresses($customer);
         return parent::_afterSave($customer);
     }
 
@@ -307,5 +289,23 @@ class Webinse_OfflineStores_Model_Resource_Offlinestore extends Mage_Eav_Model_E
             $this->saveAttribute($customer, 'rp_token_created_at');
         }
         return $this;
+    }
+
+    /**
+     * Get positions of associated to category products
+     *
+     * @param Mage_Catalog_Model_Category $category
+     * @return array
+     */
+    public function getProductsPosition($offlineStore)
+    {
+
+        $select = $this->_getWriteAdapter()->select()
+            ->from($this->_offlinestoreProductTable, array('product_id', 'position'))
+            ->where('offlinestore_id = :offlinestore_id');
+
+        $bind = array('offlinestore_id' => (int)$offlineStore->getId());
+
+        return $this->_getWriteAdapter()->fetchPairs($select, $bind);
     }
 }

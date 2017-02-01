@@ -81,5 +81,6 @@ class Webinse_OfflineStores_Block_Adminhtml_OfflineStores_Edit extends Mage_Admi
             'tab'       => '{{tab_id}}'
         ));
     }
+
 }
 

@@ -12,24 +12,26 @@ class Webinse_OfflineStores_Block_Adminhtml_OfflineStores_Grid extends Mage_Admi
 
     protected function _prepareCollection()
     {
-        // var_dump(get_parent_class(Mage::getModel('webinseofflinestores/offlinestores')));die;
+        $collection = Mage::getModel('webinseofflinestores/offlinestore')->getCollection()
+            ->addAttributeToSelect('*');
+
         /*print_r('<pre>');
-        print_r(get_class_methods(Mage::getModel('webinseofflinestores/offlinestores')));
+        print_r($collection->getSelect()->__toString());
         print_r('</pre>');
         die;*/
-        $collection = Mage::getModel('webinseofflinestores/offlinestore')->getCollection();
+
         $this->setCollection($collection);
         return parent::_prepareCollection();
     }
 
     protected function _prepareColumns()
     {
-        $this->addColumn('id',
+        $this->addColumn('entity_id',
             array(
                 'header' => 'ID',
                 'align' =>'right',
                 'width' => '50px',
-                'index' => 'id',
+                'index' => 'entity_id',
             ));
         $this->addColumn('name',
             array(
@@ -42,7 +44,7 @@ class Webinse_OfflineStores_Block_Adminhtml_OfflineStores_Grid extends Mage_Admi
                 'header' => 'Country',
                 'align' =>'right',
                 'width' => '200px',
-                'index' => 'country',
+                'index' => 'country_id',
             ));
         $this->addColumn('city',
             array(
@@ -58,12 +60,12 @@ class Webinse_OfflineStores_Block_Adminhtml_OfflineStores_Grid extends Mage_Admi
                 'width' => '200px',
                 'index' => 'street',
             ));
-        $this->addColumn('position',
+        $this->addColumn('disposition',
             array(
                 'header' => 'Position',
                 'align' =>'right',
                 'width' => '50px',
-                'index' => 'position',
+                'index' => 'disposition',
             ));
         $this->addColumn('status',
             array(

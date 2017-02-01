@@ -44,6 +44,21 @@
         <reference name="content">
             <block type="webinseofflinestores/adminhtml_offlinestores_edit" name="offlinestores_edit"></block>
         </reference>
+        <reference name="left">
+            <block type="webinseofflinestores/adminhtml_offlinestores_edit_tabs" name="offlinestores_tabs">
+                <block type="webinseofflinestores/adminhtml_offlinestores_edit_tab_product" name="offlinestores.edit.tab.product">
+                    <block type="webinseofflinestores/adminhtml_offlinestores_edit_tab_product_grid" name="adminhtml_offlinestores_edit_tab_product.grid" template="offlinestores/tab/grid.phtml"/>
+                </block>
+                <!--<block type="adminhtml/customer_edit_tab_view" name="customer_edit_tab_view" template="customer/tab/view.phtml">
+                    <block type="adminhtml/customer_edit_tab_view_sales" name="sales" template="customer/tab/view/sales.phtml" before="-" />
+                    <block type="adminhtml/customer_edit_tab_view_accordion" name="accordion" />
+                </block>
+                <action method="addTab"><name>customer_edit_tab_view</name><block>customer_edit_tab_view</block></action>-->
+            </block>
+        </reference>
+        <reference name="js">
+            <block type="webinseofflinestores/adminhtml_template" template="offlinestores/edit/js.phtml" name="offlinestore.edit.js" as="offlinestore_edit_js"></block>
+        </reference>
         <!--<reference name="head">
             <block type="adminhtml/template" name="optional_zip_countries" as="optional_zip_countries" template="directory/js/optional_zip_countries.phtml" />
             <action method="addJs"><file>mage/adminhtml/product/composite/configure.js</file></action>

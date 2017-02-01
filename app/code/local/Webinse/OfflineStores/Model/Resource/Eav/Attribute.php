@@ -104,7 +104,6 @@ class Webinse_OfflineStores_Model_Resource_Eav_Attribute extends Mage_Eav_Model_
 
     protected function _construct()
     {
-        die('!');
         $this->_init('catalog/attribute');
     }
 

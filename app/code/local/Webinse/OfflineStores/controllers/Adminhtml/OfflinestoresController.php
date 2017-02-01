@@ -13,7 +13,7 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
         }
 
         Mage::register('offlinestore', $offlineStore);
-        return $this;
+        return $offlineStore;
     }
 
 
@@ -87,8 +87,6 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
      */
     public function saveAction(){
 
-
-        Mage::Log($this->getRequest()->getPost(),null,'offline_store_product.log');
         $storeId        = $this->getRequest()->getParam('store');
         $redirectBack   = $this->getRequest()->getParam('back', false);
         $productId      = $this->getRequest()->getParam('id');
@@ -100,6 +98,7 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
 
             try {
                 $offlineStore->save();
+
                 $offlineStoreId = $offlineStore->getId();
 
                 if (isset($data['copy_to_stores'])) {
@@ -144,50 +143,37 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
         $response->setError(false);
 
         try {
-            $productData = $this->getRequest()->getPost('offlinestore');
+            $offlineStoreData = $this->getRequest()->getPost('offlinestore');
 
-            /* @var $product Mage_Catalog_Model_Product */
-            $product = Mage::getModel('webinseofflinestores/offlinestore');
-            $product->setData('_edit_mode', true);
+            /* @var $offlineStore Mage_Catalog_Model_Product */
+            $offlineStore = Mage::getModel('webinseofflinestores/offlinestore');
+            $offlineStore->setData('_edit_mode', true);
             if ($storeId = $this->getRequest()->getParam('store')) {
-                $product->setStoreId($storeId);
+                $offlineStore->setStoreId($storeId);
             }
             if ($setId = $this->getRequest()->getParam('set')) {
-                $product->setAttributeSetId($setId);
+                $offlineStore->setAttributeSetId($setId);
             }
             if ($typeId = $this->getRequest()->getParam('type')) {
-                $product->setTypeId($typeId);
+                $offlineStore->setTypeId($typeId);
             }
-            if ($productId = $this->getRequest()->getParam('id')) {
-                $product->load($productId);
+            if ($offlineStoreId = $this->getRequest()->getParam('id')) {
+                $offlineStore->load($offlineStoreId);
             }
 
             $dateFields = array();
-            $attributes = $product->getAttributes();
+            $attributes = $offlineStore->getAttributes();
             foreach ($attributes as $attrKey => $attribute) {
                 if ($attribute->getBackend()->getType() == 'datetime') {
-                    if (array_key_exists($attrKey, $productData) && $productData[$attrKey] != ''){
+                    if (array_key_exists($attrKey, $offlineStoreData) && $offlineStoreData[$attrKey] != ''){
                         $dateFields[] = $attrKey;
                     }
                 }
             }
-            $productData = $this->_filterDates($productData, $dateFields);
-            $product->addData($productData);
+            $offlineStoreData = $this->_filterDates($offlineStoreData, $dateFields);
+            $offlineStore->addData($offlineStoreData);
+            $offlineStore->validate();
 
-            $product->validate();
-            /**
-             * @todo implement full validation process with errors returning which are ignoring now
-             */
-//            if (is_array($errors = $product->validate())) {
-//                foreach ($errors as $code => $error) {
-//                    if ($error === true) {
-//                        Mage::throwException(Mage::helper('catalog')->__('Attribute "%s" is invalid.', $product->getResource()->getAttribute($code)->getFrontend()->getLabel()));
-//                    }
-//                    else {
-//                        Mage::throwException($error);
-//                    }
-//                }
-//            }
         }
         catch (Mage_Eav_Model_Entity_Attribute_Exception $e) {
             $response->setError(true);
@@ -204,45 +190,6 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
         }
 
         $this->getResponse()->setBody($response->toJson());
-
-        /**
-         * Check request validation
-         */
-
-       /* $notEmpty = new Zend_Validate_NotEmpty();
-        $notEmpty->setMessages(array(
-            $notEmpty::IS_EMPTY => Mage::helper('webinseofflinestores')->__('Error message: can not be empty')
-        ));
-
-        $messageValidate = new Zend_Validate();
-        $messageValidate->addValidator($notEmpty);
-
-        if (!$messageValidate->isValid($request->getParam('name'))) {
-            foreach ($messageValidate->getMessages() as $key => $message) {
-                Mage::getSingleton('core/session')->addError($message);
-            }
-            return false;
-        }*/
-
-        /*
-               $response = new Varien_Object();
-               $response->setError(false);
-
-               $attributeCode  = $this->getRequest()->getParam('attribute_code');
-               $attributeId    = $this->getRequest()->getParam('attribute_id');
-              $attribute = Mage::getModel('catalog/resource_eav_attribute')
-                   ->loadByCode($this->_entityTypeId, $attributeCode);
-
-               if ($attribute->getId() && !$attributeId) {
-                   Mage::getSingleton('adminhtml/session')->addError(
-                       Mage::helper('catalog')->__('Attribute with the same code already exists'));
-                   $this->_initLayoutMessages('adminhtml/session');
-                   $response->setError(true);
-                   $response->setMessage($this->getLayout()->getMessagesBlock()->getGroupedHtml());
-               }
-
-               $this->getResponse()->setBody($response->toJson());
-        */
     }
 
     /**
@@ -396,4 +343,5 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
     {
         return Mage::getModel($path, $arguments);
     }
+
 }

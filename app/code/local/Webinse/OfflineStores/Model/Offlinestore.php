@@ -1,11 +1,10 @@
 <?php
-class Webinse_OfflineStores_Model_OfflineStore extends Mage_Core_Model_Abstract
+class Webinse_OfflineStores_Model_Offlinestore extends Mage_Core_Model_Abstract
 {
     /**
      * Offline store model instance
      *
-     * @deprecated if use as singleton
-     * @var Mage_Catalog_Model_Product
+     * @var Webinse_OfflineStores_Model_OfflineStore
      */
     protected $_offlineStore;
 
@@ -29,6 +28,8 @@ class Webinse_OfflineStores_Model_OfflineStore extends Mage_Core_Model_Abstract
      * @var array
      */
     protected $_attributes;
+
+    protected $_eventPrefix = 'webinse_offlinestores';
 
     /**
      * Initialize offlinestore model
@@ -142,6 +143,7 @@ class Webinse_OfflineStores_Model_OfflineStore extends Mage_Core_Model_Abstract
         }
         return $this->getOfflineStore($offlineStore)->getData($cacheKey);
     }
+
     /**
      * Get array of product set attributes
      *
@@ -154,8 +156,76 @@ class Webinse_OfflineStores_Model_OfflineStore extends Mage_Core_Model_Abstract
             ->loadAllAttributes($this->getOfflineStore($product))
             ->getSortedAttributes($this->getOfflineStore($product)->getAttributeSetId());
     }
+
     public function getAttributeSetId()
     {
         return '14';
+    }
+
+    /**
+     * Validate Product Data
+     *
+     * @todo implement full validation process with errors returning which are ignoring now
+     *
+     * @return Mage_Catalog_Model_Product
+     */
+    public function validate()
+    {
+        print_r('<pre>');
+        print_r(Mage::app()->getRequest()->getParams());
+        print_r('</pre>');
+        die;
+        Mage::dispatchEvent($this->_eventPrefix.'_validate_before', array($this->_eventObject=>$this));
+        $this->_getResource()->validate($this);
+        Mage::dispatchEvent($this->_eventPrefix.'_validate_after', array($this->_eventObject=>$this));
+        return $this;
+    }
+
+    /**
+     * Retrieve resource instance wrapper
+     *
+     * @return Mage_Catalog_Model_Resource_Eav_Mysql4_Product
+     */
+    protected function _getResource()
+    {
+        return parent::_getResource();
+    }
+
+
+    /**
+     * Add data to the object.
+     *
+     * Retains previous data in the object.
+     *
+     * @param array $arr
+     * @return Varien_Object
+     */
+    public function addData(array $arr)
+    {
+        foreach($arr as $index=>$value) {
+            $this->setData($index, $value);
+        }
+        return $this;
+    }
+
+    /**
+     * Retrieve array of product id's for category
+     *
+     * array($productId => $position)
+     *
+     * @return array
+     */
+    public function getProductsPosition()
+    {
+        if (!$this->getId()) {
+            return array();
+        }
+
+        $array = $this->getData('products_position');
+        if (is_null($array)) {
+            $array = $this->getResource()->getProductsPosition($this);
+            $this->setData('products_position', $array);
+        }
+        return $array;
     }
 }

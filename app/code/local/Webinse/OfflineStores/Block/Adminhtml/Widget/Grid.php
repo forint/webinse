@@ -5,6 +5,7 @@ class Webinse_OfflineStores_Block_Adminhtml_Widget_Grid extends Mage_Adminhtml_B
 
     public function __construct()
     {
+        die('!');
         parent::__construct();
         $this->setId('offlinestores_widget_grid');
         $this->setDefaultSort('entity_id');
@@ -23,6 +24,7 @@ class Webinse_OfflineStores_Block_Adminhtml_Widget_Grid extends Mage_Adminhtml_B
 
     protected function _prepareCollection()
     {
+        die('_prepareCollection');die;
         $store = $this->_getStore();
         var_dump(get_class(Mage::getModel('catalog/product')));die;
         $collection = Mage::getModel('catalog/product')->getCollection()

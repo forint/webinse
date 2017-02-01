@@ -8,7 +8,7 @@ class Webinse_OfflineStores_Model_Resource_Setup extends Mage_Eav_Model_Entity_S
     {
         $entities = array(
             'offlinestore' => array(
-                'entity_model'                   => 'webinseofflinestores/webinseofflinestores',
+                'entity_model'                   => 'webinseofflinestores/offlinestore', //'webinseofflinestores/webinseofflinestores'
                 'table'                          => 'webinseofflinestores/table_offlinestores',
                 'attribute_model'                => 'webinseofflinestores/attribute',
                 'entity_attribute_collection'    => 'webinseofflinestores/attribute_collection',
