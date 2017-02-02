@@ -99,17 +99,17 @@
                 <children translate="title" module="webinseofflinestores">
                     <webinseofflinestores_add translate="title" module="webinseofflinestores"><!-- this is the submenu item -->
                         <title>Add Offline Store</title>
-                        <action>webinseofflinestores_admin/adminhtml_offlinestores</action>
+                        <action>webinseofflinestores_admin/adminhtml_offlinestores/new</action>
                         <sort_order>20</sort_order>
                     </webinseofflinestores_add>
                     <webinseofflinestores_view translate="title" module="webinseofflinestores"><!-- this is the submenu item -->
                         <title>View Offline Stores</title>
-                        <action>webinseofflinestores_admin/adminhtml_offlinestores</action>
+                        <action>webinseofflinestores_admin/adminhtml_offlinestores/index</action>
                         <sort_order>10</sort_order>
                     </webinseofflinestores_view>
                     <webinseofflinestores_preferences translate="title" module="webinseofflinestores"><!-- this is the submenu item -->
                         <title>Settings</title>
-                        <action>webinseofflinestores_admin/adminhtml_preferences</action>
+                        <action>webinseofflinestores_admin/adminhtml_offlinestores/settings</action>
                         <sort_order>30</sort_order>
                     </webinseofflinestores_preferences>
                 </children>
@@ -132,15 +132,17 @@
                             <children>
                                 <config>
                                     <children>
-                                        <adminhtml_offlinestores>
-                                            <title>Add Offline Store</title>
-                                        </adminhtml_offlinestores>
-                                        <adminhtml_view>
-                                            <title>View Offline Stores</title>
-                                        </adminhtml_view>
-                                        <adminhtml_preferences>
-                                            <title>Settings</title>
-                                        </adminhtml_preferences>
+                                        <webinseofflinestores>
+                                            <webinseofflinestores_add>
+                                                <title>Add Offline Store</title>
+                                            </webinseofflinestores_add>
+                                            <webinseofflinestores_view>
+                                                <title>View Offline Stores</title>
+                                            </webinseofflinestores_view>
+                                            <webinseofflinestores_preferences>
+                                                <title>Settings</title>
+                                            </webinseofflinestores_preferences>
+                                        </webinseofflinestores>
                                     </children>
                                 </config>
                             </children>

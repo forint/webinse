@@ -18,7 +18,7 @@ class Webinse_OfflineStores_Block_Adminhtml_OfflineStores_Edit_Tab_Product_Grid 
     public function __construct()
     {
         parent::__construct();
-        $this->setId('products');
+        $this->setId('offlinestore');
         $this->setDefaultSort('increment_id');
         $this->setDefaultDir('DESC');
         $this->setSaveParametersInSession(true);
@@ -310,5 +310,10 @@ class Webinse_OfflineStores_Block_Adminhtml_OfflineStores_Edit_Tab_Product_Grid 
     public function setFilterVisibility($visible=true)
     {
         $this->_filterVisibility = $visible;
+    }
+
+    public function getJsObjectName()
+    {
+        return $this->getId().'JsObject';
     }
 }

@@ -15,11 +15,6 @@ class Webinse_OfflineStores_Block_Adminhtml_OfflineStores_Grid extends Mage_Admi
         $collection = Mage::getModel('webinseofflinestores/offlinestore')->getCollection()
             ->addAttributeToSelect('*');
 
-        /*print_r('<pre>');
-        print_r($collection->getSelect()->__toString());
-        print_r('</pre>');
-        die;*/
-
         $this->setCollection($collection);
         return parent::_prepareCollection();
     }

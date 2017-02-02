@@ -14,7 +14,7 @@ class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tabs extends Mage
     {
         parent::__construct();
         $this->setId('offlinestores_info_tabs');
-        $this->setDestElementId('edit_form');
+        $this->setDestElementId('offlinestore_edit');
     }
 
 

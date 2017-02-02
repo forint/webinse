@@ -16,7 +16,6 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
         return $offlineStore;
     }
 
-
     public function indexAction()
     {
         $this->loadLayout();
@@ -193,6 +192,19 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
     }
 
     /**
+     * Settings Action
+     * Redirect to Current Module System Preferences
+     */
+    public function settingsAction()
+    {
+        $this->_redirect('adminhtml/system_config/edit',
+            array(
+                'section' => 'offlinestores'
+            )
+        );
+    }
+    
+    /**
      * Initialize product before saving
      */
     protected function _initOfflineStoreSave()
@@ -281,7 +293,6 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
         $this->setData('product_ids', $ids);
         return $this;
     }
-
 
     /**
      * Offline store edit form

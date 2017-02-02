@@ -5,26 +5,31 @@ class Webinse_Offlinestores_Block_Adminhtml_OfflineStores_Edit_Form extends Mage
     {
         parent::_construct();
         $this->setTemplate('offlinestores/widget/form.phtml');
-        $this->setDestElementId('edit_form');
+        $this->setDestElementId('offlinestore_edit');
         $this->setShowGlobalIcon(false);
     }
 
     protected function _prepareForm(){
-        /*
-         * id должен указываться уникальный HTML id формы на странице,
-         * т.к. отправка и изменение формы происходит JavaScript-ом,
-         * который обращается по данному айди
+        /**
+         * Form ID must specify to unique FORM-HTML ID
+         * Dispatch and change form occur with Javascript, whitch take that ID
          */
         $form = new Varien_Data_Form(array(
-            'id'     => 'edit_form',
+            'id'     => 'offlinestore_edit',
             'action' => $this->getUrl('*/*/save', array('id'=>$this->getRequest()->getParam('id'))),
             'method' => 'post',
             'enctype'=> 'multipart/form-data'
         ));
 
+        $form->addField('in_offlinestore', 'hidden', array(
+            'label' => Mage::helper('webinseofflinestores')->__('Offline Store Products'),
+            'class' => '',
+            'required' => false,
+            'name' => 'in_offlinestore',
+        ));
+
         $form->setUseContainer(true);
         $this->setForm($form);
-
         return parent::_prepareForm();
     }
 

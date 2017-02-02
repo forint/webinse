@@ -1,3 +1,4 @@
+<?php //var_dump($this->getJsObjectName());die; ?>
 <?php
 /**
  * Template for Mage_Adminhtml_Block_Widget_Grid
@@ -180,11 +181,41 @@ $numColumns = sizeof($this->getColumns());
 </div>
 <script type="text/javascript">
 //<![CDATA[
+    function registerOfflineStoreProduct(grid, element, checked){
+        alert('22');
+        if(checked){
+            if(element.positionElement){
+                element.positionElement.disabled = false;
+                categoryProducts.set(element.value, element.positionElement.value);
+            }
+        }
+        else{
+            if(element.positionElement){
+                element.positionElement.disabled = true;
+            }
+            categoryProducts.unset(element.value);
+        }
+        $('in_category_products').value = categoryProducts.toQueryString();
+        grid.reloadParams = {'selected_products[]':categoryProducts.keys()};
+    }
+    function offlineStoreProductRowClick(grid, event){
+        alert('asdfasdf');
+        var trElement = Event.findElement(event, 'tr');
+        var isInput   = Event.element(event).tagName == 'INPUT';
+        if(trElement){
+            var checkbox = Element.getElementsBySelector(trElement, 'input');
+            if(checkbox[0]){
+                var checked = isInput ? checkbox[0].checked : !checkbox[0].checked;
+                <?php echo $this->getJsObjectName() ?>.setCheckboxChecked(checkbox[0], checked);
+            }
+        }
+    }
     <?php echo $this->getJsObjectName() ?> = new varienGrid('<?php echo $this->getId() ?>', '<?php echo $this->getGridUrl() ?>', '<?php echo $this->getVarNamePage() ?>', '<?php echo $this->getVarNameSort() ?>', '<?php echo $this->getVarNameDir() ?>', '<?php echo $this->getVarNameFilter() ?>');
     <?php echo $this->getJsObjectName() ?>.useAjax = '<?php echo $this->getUseAjax() ?>';
-    <?php if($this->getRowClickCallback()): ?>
-        <?php echo $this->getJsObjectName() ?>.rowClickCallback = <?php echo $this->getRowClickCallback() ?>;
-    <?php endif; ?>
+
+        <?php echo $this->getJsObjectName() ?>.rowClickCallback = 'offlineStoreProductRowClick';
+        <?php echo $this->getJsObjectName() ?>.checkboxCheckCallback = 'registerOfflineStoreProduct';
+
     <?php if($this->getCheckboxCheckCallback()): ?>
         <?php echo $this->getJsObjectName() ?>.checkboxCheckCallback = <?php echo $this->getCheckboxCheckCallback() ?>;
     <?php endif; ?>
