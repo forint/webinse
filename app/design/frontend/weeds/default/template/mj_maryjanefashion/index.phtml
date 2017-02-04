@@ -1,0 +1,31 @@
+<div class="maryjanefashion_block">
+    <form action="/maryjanefashion/index/parse" method="post">
+        <div>
+            <label><?php echo $this->__('Enter product URL'); ?>:</label>
+            <input type="text" name="url" value="" />
+        </div>
+
+        <input type="submit" name="Submit">
+    </form>
+</div>
+<table cellpadding="10" cellspacing="10" border="1">
+    <thead>
+            <th>ID</th>
+            <th>NAME</th>
+            <th>DESCRIPTION</th>
+            <th>&nbsp;</th>
+    </thead>
+    <tbody>
+<?php
+$collection = Mage::getResourceModel('catalog/product_collection')->addAttributeToSelect('*')->load();
+$currency_code = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
+foreach($collection as $product) {
+    /*print_r("<pre>");
+    print_r($product);
+    print_r("</pre>");
+    die();*/
+    echo "<tr><td>".$product->getId()."</td><td>".$product->getName()."</td><td>".$product->getDescription()."</td><td><p><div>".$product->getPrice()."&nbsp;".$currency_code."</div><button type='button' class='button btn-cart' onclick='setLocation(\"".$product->getProductUrl()."\")'><span><span>Buy</span></span></button></td></tr>";
+}
+?>
+</tbody>
+    </table>

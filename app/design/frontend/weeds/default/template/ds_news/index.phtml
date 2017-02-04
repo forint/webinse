@@ -1,0 +1,15 @@
+<?php
+/*$news = Mage::registry('news');
+foreach ($news as $item){
+    echo "<h2>{$item['title']}</h2>";
+}*/
+
+$news = $this->getNewsCollection();
+$newsViewUrl = Mage::getUrl('news/index/view');
+?>
+<h1>Magento Life News</h1>
+<?php foreach ($news as $item): ?>
+    <figure>
+        <h3><a href="<?php echo $item->link; ?>" title="<?php echo $item->getTitle(); ?>"><?php echo $item->getTitle(); ?></a></h3>
+    </figure>
+<?php endforeach; ?>

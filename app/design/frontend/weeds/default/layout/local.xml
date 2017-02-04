@@ -1,0 +1,46 @@
+<layout version="0.1.0">
+    <default>
+
+        <reference name="head">
+            <!--Adding JS Files Styles  -->
+            <action method="addItem"><type>skin_js</type><name>js/lib/elevatezoom/jquery.elevatezoom.js</name></action>
+            <action method="addItem"><type>skin_js</type><name>js/lib/bootstrap.min.js</name><params/></action>
+            <action method="addItem"><type>skin_js</type><name>js/lib/jquery.carouFredSel-6.2.1-packed.js</name><params/></action>
+             <action method="addItem"><type>skin_js</type><name>js/lib/jquery.easing.js</name><params/></action>
+             <action method="addItem"><type>skin_js</type><name>js/lib/jquery.flexslider.js</name><params/></action>
+            <action method="addItem"><type>skin_js</type><name>js/lib/jquery.sequence.min.js</name><params/></action> 
+
+            <!--Adding CSS Files Styles-->
+            <action method="addCss"><stylesheet>css/bootstrap.css</stylesheet><params/></action>
+            <action method="addCss"><stylesheet>css/bootstrap-theme.css</stylesheet><params/></action>
+
+            <!--
+            <action method="addCss"><stylesheet>css/bootstrapTheme.css</stylesheet><params/></action>
+            <action method="addCss"><stylesheet>css/font-awesome.min.css</stylesheet><params/></action>
+            <action method="addCss"><stylesheet>css/flexslider.css</stylesheet><params/></action>
+            <action method="addCss"><stylesheet>css/owl.carousel.css</stylesheet><params/></action>
+            <action method="addCss"><stylesheet>css/owl.theme.css</stylesheet><params/></action>
+            <action method="addCss"><stylesheet>css/sequence-looptheme.css</stylesheet><params/></action>
+            <action method="addCss"><stylesheet>css/style.css</stylesheet><params/></action>
+            <action method="addCss"><stylesheet>css/style8.css</stylesheet><params/></action>
+            -->
+            <block type="core/template" name="google_verification" template="page/html/googleverification.phtml" />
+        </reference>
+
+        <reference name="left">
+            <block type="catalog/product_widget_new" name="navigation-left-widget" template="page/widget/left-menu.phtml" />
+        </reference>
+
+        <!-- this part removes breadcrumbs from product view page -->
+        <catalog_product_view>
+            <remove name="breadcrumbs"/>
+        </catalog_product_view>
+        <!-- this part removes breadcrumbs from product list pages -->
+        <catalog_category_default>
+            <remove name="breadcrumbs"/>
+        </catalog_category_default>
+        <catalog_category_layered>
+            <remove name="breadcrumbs"/>
+        </catalog_category_layered>
+    </default>
+</layout>

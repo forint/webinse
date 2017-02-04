@@ -1,6 +1,8 @@
 <?php
 $installer = $this;
-$tableOfflineStores = $installer->getTable('webinseofflinestores/table_offlinestores');
+$tableOfflineStores = 'webinseofflinestores/table_offlinestores';
+$tableAdditionalAttribute = 'webinseofflinestores/attribute_additional';
+$tableEavAttributeWebsite = 'webinseofflinestores/attribute_website';
 
 /**
  * Drop Offline Stores Entity Table and her Foreign Keys if exists
@@ -15,11 +17,12 @@ if ( Mage::getSingleton('core/resource')->getConnection('core_write')->isTableEx
  * Create all entity tables
  */
 $installer->createEntityTables($tableOfflineStores);
+
 /**
  * Create table 'webinseofflinestores/attribute_additional'
  */
 $table = $installer->getConnection()
-    ->newTable($installer->getTable('webinseofflinestores/attribute_additional'))
+    ->newTable($installer->getTable($tableAdditionalAttribute))
     ->addColumn('attribute_id', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned'  => true,
         'nullable'  => false,
@@ -109,11 +112,11 @@ $table = $installer->getConnection()
         'nullable'  => false,
         'default'   => '0',
     ), 'Is Used For Promo Rules')
-    ->addIndex($installer->getIdxName('webinseofflinestores/attribute_additional', array('used_for_sort_by')),
+    ->addIndex($installer->getIdxName($tableAdditionalAttribute, array('used_for_sort_by')),
         array('used_for_sort_by'))
-    ->addIndex($installer->getIdxName('webinseofflinestores/attribute_additional', array('used_in_product_listing')),
+    ->addIndex($installer->getIdxName($tableAdditionalAttribute, array('used_in_product_listing')),
         array('used_in_product_listing'))
-    ->addForeignKey($installer->getFkName('webinseofflinestores/attribute_additional', 'attribute_id', 'eav/attribute', 'attribute_id'),
+    ->addForeignKey($installer->getFkName($tableAdditionalAttribute, 'attribute_id', 'eav/attribute', 'attribute_id'),
         'attribute_id', $installer->getTable('eav/attribute'), 'attribute_id',
         Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE)
     ->setComment('Catalog EAV Attribute Table');
@@ -123,7 +126,7 @@ $installer->getConnection()->createTable($table);
  * Create table 'customer/eav_attribute_website'
  */
 $table = $installer->getConnection()
-    ->newTable($installer->getTable('webinseofflinestores/attribute_website'))
+    ->newTable($installer->getTable($tableEavAttributeWebsite))
     ->addColumn('attribute_id', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned'  => true,
         'nullable'  => false,
@@ -145,18 +148,17 @@ $table = $installer->getConnection()
     ->addColumn('multiline_count', Varien_Db_Ddl_Table::TYPE_SMALLINT, null, array(
         'unsigned'  => true,
     ), 'Multiline Count')
-    ->addIndex($installer->getIdxName('webinseofflinestores/attribute_website', array('website_id')),
+    ->addIndex($installer->getIdxName($tableEavAttributeWebsite, array('website_id')),
         array('website_id'))
     ->addForeignKey(
-        $installer->getFkName('webinseofflinestores/attribute_website', 'attribute_id', 'eav/attribute', 'attribute_id'),
+        $installer->getFkName($tableEavAttributeWebsite, 'attribute_id', 'eav/attribute', 'attribute_id'),
         'attribute_id', $installer->getTable('eav/attribute'), 'attribute_id',
         Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE)
-    ->addForeignKey($installer->getFkName('webinseofflinestores/attribute_website', 'website_id', 'core/website', 'website_id'),
+    ->addForeignKey($installer->getFkName($tableEavAttributeWebsite, 'website_id', 'core/website', 'website_id'),
         'website_id', $installer->getTable('core/website'), 'website_id',
         Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE)
     ->setComment('Customer Eav Attribute Website');
 $installer->getConnection()->createTable($table);
 
 $installer->installEntities();
-
 $installer->endSetup();

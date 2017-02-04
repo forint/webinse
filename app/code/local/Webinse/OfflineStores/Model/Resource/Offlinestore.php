@@ -235,4 +235,6 @@ class Webinse_OfflineStores_Model_Resource_Offlinestore extends Mage_Eav_Model_E
 
         return $this->_getWriteAdapter()->fetchPairs($select, $bind);
     }
+
+
 }

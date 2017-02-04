@@ -41,6 +41,15 @@
     </webinseofflinestores_admin_adminhtml_offlinestores_index>
 
     <webinseofflinestores_admin_adminhtml_offlinestores_edit>
+        <reference name="head">
+            <action method="setCanLoadExtJs"><flag>1</flag></action>
+            <action method="setCanLoadTinyMce"><flag>1</flag></action>
+            <action method="addItem"><type>js</type><name>mage/adminhtml/wysiwyg/tiny_mce/setup.js</name></action>
+            <action method="addJs"><script>mage/adminhtml/wysiwyg/widget.js</script></action>
+            <action method="addItem"><type>js</type><name>prototype/window.js</name></action>
+            <action method="addItem"><type>js_css</type><name>prototype/windows/themes/default.css</name></action>
+            <action method="addCss"><name>lib/prototype/windows/themes/magento.css</name></action>
+        </reference>
         <reference name="content">
             <block type="webinseofflinestores/adminhtml_offlinestores_edit" name="offlinestores_edit"></block>
         </reference>
@@ -49,32 +58,20 @@
                 <block type="webinseofflinestores/adminhtml_offlinestores_edit_tab_product" name="offlinestores.edit.tab.product">
                     <block type="webinseofflinestores/adminhtml_offlinestores_edit_tab_product_grid" name="adminhtml_offlinestores_edit_tab_product.grid" template="offlinestores/tab/grid.phtml"/>
                 </block>
-                <!--<block type="adminhtml/customer_edit_tab_view" name="customer_edit_tab_view" template="customer/tab/view.phtml">
-                    <block type="adminhtml/customer_edit_tab_view_sales" name="sales" template="customer/tab/view/sales.phtml" before="-" />
-                    <block type="adminhtml/customer_edit_tab_view_accordion" name="accordion" />
-                </block>
-                <action method="addTab"><name>customer_edit_tab_view</name><block>customer_edit_tab_view</block></action>-->
             </block>
         </reference>
+
         <reference name="js">
             <block type="webinseofflinestores/adminhtml_template" template="offlinestores/edit/js.phtml" name="offlinestore.edit.js" as="offlinestore_edit_js"></block>
+            <block type="core/template" template="catalog/wysiwyg/js.phtml"/>
         </reference>
-        <!--<reference name="head">
-            <block type="adminhtml/template" name="optional_zip_countries" as="optional_zip_countries" template="directory/js/optional_zip_countries.phtml" />
-            <action method="addJs"><file>mage/adminhtml/product/composite/configure.js</file></action>
-            <action method="addJs"><file>varien/configurable.js</file></action>
-        </reference>
-        <reference name="left">
-            <block type="adminhtml/customer_edit_tabs" name="customer_edit_tabs">
-                <block type="adminhtml/customer_edit_tab_view" name="customer_edit_tab_view" template="customer/tab/view.phtml">
-                    <block type="adminhtml/customer_edit_tab_view_sales" name="sales" template="customer/tab/view/sales.phtml" before="-" />
-                    <block type="adminhtml/customer_edit_tab_view_accordion" name="accordion" />
-                </block>
-                <action method="addTab"><name>customer_edit_tab_view</name><block>customer_edit_tab_view</block></action>
-            </block>
-        </reference>
-        <reference name="js">
-            <block type="adminhtml/template" template="customer/edit/js.phtml" name="customer.edit.js" as="customer_edit_js"></block>
+        <!--<reference name="js">
+            <block type="adminhtml/catalog_product_edit_js" template="catalog/product/js.phtml" name="catalog_product_js"></block>
+            <block type="core/template" template="catalog/wysiwyg/js.phtml"/>
+        </reference>-->
+       <!-- <reference name="js">
+            <block type="webinseofflinestores/adminhtml_template" template="offlinestores/edit/js.phtml" name="offlinestore.edit.js" as="offlinestore_edit_js"></block>
+            <block type="core/template" template="catalog/wysiwyg/js.phtml"/>
         </reference>-->
     </webinseofflinestores_admin_adminhtml_offlinestores_edit>
 
@@ -87,62 +84,10 @@
                 <block type="webinseofflinestores/adminhtml_offlinestores_edit_tab_product" name="offlinestores.edit.tab.product">
                     <block type="webinseofflinestores/adminhtml_offlinestores_edit_tab_product_grid" name="adminhtml_offlinestores_edit_tab_product.grid" template="offlinestores/tab/grid.phtml"/>
                 </block>
-                <!--<block type="adminhtml/customer_edit_tab_view" name="customer_edit_tab_view" template="customer/tab/view.phtml">
-                    <block type="adminhtml/customer_edit_tab_view_sales" name="sales" template="customer/tab/view/sales.phtml" before="-" />
-                    <block type="adminhtml/customer_edit_tab_view_accordion" name="accordion" />
-                </block>
-                <action method="addTab"><name>customer_edit_tab_view</name><block>customer_edit_tab_view</block></action>-->
             </block>
         </reference>
         <reference name="js">
             <block type="webinseofflinestores/adminhtml_template" template="offlinestores/edit/js.phtml" name="offlinestore.edit.js" as="offlinestore_edit_js"></block>
         </reference>
     </webinseofflinestores_admin_adminhtml_offlinestores_new>
-    <!--<webinseofflinestores_admin_adminhtml_offlinestores_new>
-        <update handle="editor"/>
-        <reference name="content">
-            <block type="webinseofflinestores/adminhtml_offlinestores_edit" name="offlinestores_edit"></block>
-        </reference>
-        <reference name="left">
-            <block type="adminhtml/store_switcher" name="store_switcher" before="-"></block>
-            <block type="webinseofflinestores/adminhtml_offlinestores_edit_tabs" name="offlinestores_tabs"></block>
-        </reference>
-        <reference name="js">
-            <block type="webinseofflinestores/adminhtml_offlinestores_edit_js" template="offlinestores/js.phtml" name="offlinestores_js"></block>
-            <block type="core/template" template="catalog/wysiwyg/js.phtml"/>
-        </reference>
-    </webinseofflinestores_admin_adminhtml_offlinestores_new>-->
-
-<!--    <webinseofflinestores_admin_adminhtml_offlinestores_available>
-        <block type="core/text_list" name="root" output="toHtml">
-            <block type="webinseofflinestores/adminhtml_offlinestores_edit_tab_available" name="offlinestores.product.edit.tab.available"/>
-            <block type="adminhtml/widget_grid_serializer" name="related_grid_serializer">
-                <reference name="related_grid_serializer">
-                    <action method="initSerializerBlock">
-                        <grid_block_name>offlinestores.product.edit.tab.available</grid_block_name>
-                        <data_callback>getSelectedRelatedProducts</data_callback>
-                        <hidden_input_name>links[related]</hidden_input_name>
-                        <reload_param_name>products_related</reload_param_name>
-                    </action>
-                    <action method="addColumnInputName">
-                        <input_name>position</input_name>
-                    </action>
-                </reference>
-            </block>
-        </block>
-    </webinseofflinestores_admin_adminhtml_offlinestores_available>-->
-    <!--<adminhtml_catalog_product_edit>
-        <update handle="editor"/>
-        <reference name="content">
-            <block type="adminhtml/catalog_product_edit" name="product_edit"></block>
-        </reference>
-        <reference name="left">
-            <block type="adminhtml/store_switcher" name="store_switcher" before="-"></block>
-            <block type="adminhtml/catalog_product_edit_tabs" name="product_tabs"></block>
-        </reference>
-        <reference name="js">
-            <block type="adminhtml/catalog_product_edit_js" template="catalog/product/js.phtml" name="catalog_product_js"></block>
-            <block type="core/template" name="catalog.wysiwyg.js" template="catalog/wysiwyg/js.phtml"/>
-        </reference>
-    </adminhtml_catalog_product_edit>-->
 </layout>

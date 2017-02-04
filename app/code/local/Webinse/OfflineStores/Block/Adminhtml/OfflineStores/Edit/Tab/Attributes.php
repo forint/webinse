@@ -56,7 +56,11 @@ class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tab_Attributes ex
 
             // Add image renderer
             $image = $form->getElement('image');
-            $form->setRenderer(Mage::getBlockSingleton('webinseofflinestores/adminhtml_offlinestores_form_element_image'));
+            if ($image){
+                $form->setRenderer(Mage::getBlockSingleton('webinseofflinestores/adminhtml_form_element_image'));
+            }
+
+
             //$image->setRendere();
             /*print_r('<pre>');
             print_r(get_class_methods($image));
@@ -122,7 +126,8 @@ class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tab_Attributes ex
     protected function _getAdditionalElementTypes()
     {
         $result = array(
-            'image'    => Mage::getConfig()->getBlockClassName('adminhtml/catalog_product_helper_form_image'),
+            //'image'    => Mage::getConfig()->getBlockClassName('adminhtml/catalog_product_helper_form_image'),
+            'image'    => Mage::getConfig()->getBlockClassName('webinseofflinestores/adminhtml_form_element_image'),
             'boolean'  => Mage::getConfig()->getBlockClassName('adminhtml/catalog_product_helper_form_boolean'),
             'textarea' => Mage::getConfig()->getBlockClassName('adminhtml/catalog_helper_form_wysiwyg')
         );

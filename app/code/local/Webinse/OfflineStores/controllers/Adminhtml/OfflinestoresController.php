@@ -393,4 +393,21 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
         return Mage::getModel($path, $arguments);
     }
 
+    /**
+     * WYSIWYG editor action for ajax request
+     *
+     */
+    public function wysiwygAction()
+    {
+        $elementId = $this->getRequest()->getParam('element_id', md5(microtime()));
+        $storeId = $this->getRequest()->getParam('store_id', 0);
+        $storeMediaUrl = Mage::app()->getStore($storeId)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+
+        $content = $this->getLayout()->createBlock('webinseofflinestores/adminhtml_form_wysiwyg_content', '', array(
+            'editor_element_id' => $elementId,
+            'store_id'          => $storeId,
+            'store_media_url'   => $storeMediaUrl,
+        ));
+        $this->getResponse()->setBody($content->toHtml());
+    }
 }

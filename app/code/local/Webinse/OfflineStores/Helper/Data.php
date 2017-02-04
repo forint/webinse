@@ -32,6 +32,16 @@ class Webinse_OfflineStores_Helper_Data extends Mage_Core_Helper_Abstract
         return $this;
     }
 
+    public function getMode()
+    {
+        return Mage::getStoreConfig('offlinestores/offlinestoresgroup/offlinestoreappearance');
+    }
+
+    public function getOfflineStoresPerPage()
+    {
+        return Mage::getStoreConfig('offlinestores/offlinestoresgroup/offlinestoresperpage');
+    }
+
     public function getImagePath($id = 0)
     {
         $path = Mage::getBaseDir('media') . '/offlinestore';
