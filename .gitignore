@@ -3,5 +3,6 @@
 /var
 /db
 /downloader
+/media
 /Applications/MAMP/htdocs/webinse/app/code/local/DS
 /app/etc/modules/DS_News.xml

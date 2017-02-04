@@ -171,10 +171,6 @@ class Webinse_OfflineStores_Model_Offlinestore extends Mage_Core_Model_Abstract
      */
     public function validate()
     {
-        print_r('<pre>');
-        print_r(Mage::app()->getRequest()->getParams());
-        print_r('</pre>');
-        die;
         Mage::dispatchEvent($this->_eventPrefix.'_validate_before', array($this->_eventObject=>$this));
         $this->_getResource()->validate($this);
         Mage::dispatchEvent($this->_eventPrefix.'_validate_after', array($this->_eventObject=>$this));
@@ -190,7 +186,6 @@ class Webinse_OfflineStores_Model_Offlinestore extends Mage_Core_Model_Abstract
     {
         return parent::_getResource();
     }
-
 
     /**
      * Add data to the object.
@@ -209,7 +204,7 @@ class Webinse_OfflineStores_Model_Offlinestore extends Mage_Core_Model_Abstract
     }
 
     /**
-     * Retrieve array of product id's for category
+     * Retrieve array of product id's for offline store
      *
      * array($productId => $position)
      *
@@ -220,12 +215,56 @@ class Webinse_OfflineStores_Model_Offlinestore extends Mage_Core_Model_Abstract
         if (!$this->getId()) {
             return array();
         }
-
         $array = $this->getData('products_position');
         if (is_null($array)) {
             $array = $this->getResource()->getProductsPosition($this);
             $this->setData('products_position', $array);
         }
         return $array;
+    }
+
+    /**
+     * Return Entity Type instance
+     *
+     * @return Mage_Eav_Model_Entity_Type
+     */
+    public function getEntityType()
+    {
+        return $this->_getResource()->getEntityType();
+    }
+
+    /**
+     * Return Entity Type ID
+     *
+     * @return int
+     */
+    public function getEntityTypeId()
+    {
+        $entityTypeId = $this->getData('entity_type_id');
+        if (!$entityTypeId) {
+            $entityTypeId = $this->getEntityType()->getId();
+            $this->setData('entity_type_id', $entityTypeId);
+        }
+        return $entityTypeId;
+    }
+
+    /**
+     * Upload Offline Store Image File to Media
+     *
+     * @param $entityId
+     */
+    public function saveImage($entityId)
+    {
+        if (isset($_FILES['image']['name']) && $_FILES['image']['name'] != '') {
+            $uploader = new Varien_File_Uploader('image');
+            $uploader->setAllowedExtensions(array('jpg', 'jpeg'));
+            $uploader->setAllowRenameFiles(false);
+            $uploader->setFilesDispersion(false);
+            $uploader->save(Mage::helper('webinseofflinestores')->getImagePath(), $entityId . '.jpg');
+        } else {
+            if (isset($data['image']['delete']) && $data['image']['delete'] == 1) {
+                @unlink(Mage::helper('webinseofflinestores')->getImagePath($entityId));
+            }
+        }
     }
 }

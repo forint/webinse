@@ -1,4 +1,3 @@
-<?php //var_dump($this->getJsObjectName());die; ?>
 <?php
 /**
  * Template for Mage_Adminhtml_Block_Widget_Grid
@@ -176,30 +175,39 @@ $numColumns = sizeof($this->getColumns());
 
     </table>
     </div>
+    <input id="in_offlinestore_products" name="in_offlinestore_products" value="" class="" type="hidden">
 </div>
 <?php if($this->canDisplayContainer()): ?>
 </div>
 <script type="text/javascript">
 //<![CDATA[
+    var offlineStoreProducts = $H(<?php echo $this->getProductsJson() ?>);
+    $('in_offlinestore_products').value = offlineStoreProducts.toQueryString();
+
+    var positionIndex = 1;
     function registerOfflineStoreProduct(grid, element, checked){
-        alert('22');
         if(checked){
             if(element.positionElement){
                 element.positionElement.disabled = false;
-                categoryProducts.set(element.value, element.positionElement.value);
+                if (!element.positionElement.value) {
+                    element.positionElement.value = positionIndex;
+                    positionIndex++;
+                }
+                offlineStoreProducts.set(element.value, element.positionElement.value);
             }
         }
         else{
             if(element.positionElement){
                 element.positionElement.disabled = true;
             }
-            categoryProducts.unset(element.value);
+            offlineStoreProducts.unset(element.value);
         }
-        $('in_category_products').value = categoryProducts.toQueryString();
-        grid.reloadParams = {'selected_products[]':categoryProducts.keys()};
+
+        $('in_offlinestore_products').value = offlineStoreProducts.toQueryString();
+        grid.reloadParams = {'selected_products[]':offlineStoreProducts.keys()};
     }
+
     function offlineStoreProductRowClick(grid, event){
-        alert('asdfasdf');
         var trElement = Event.findElement(event, 'tr');
         var isInput   = Event.element(event).tagName == 'INPUT';
         if(trElement){
@@ -207,22 +215,53 @@ $numColumns = sizeof($this->getColumns());
             if(checkbox[0]){
                 var checked = isInput ? checkbox[0].checked : !checkbox[0].checked;
                 <?php echo $this->getJsObjectName() ?>.setCheckboxChecked(checkbox[0], checked);
+                /*if (!checkbox[1].value){
+                    checkbox[1].value = positionIndex;
+                    positionIndex++;
+                }else if(!checkbox[0].checked){
+                    checkbox[1].value = '';
+                }*/
             }
         }
     }
+
+    function positionChange(event){
+        var element = Event.element(event);
+        if(element && element.checkboxElement && element.checkboxElement.checked){
+            offlineStoreProducts.set(element.checkboxElement.value, element.value);
+            $('in_offlinestore_products').value = offlineStoreProducts.toQueryString();
+        }
+    }
+
+    var tabIndex = 1000;
+    function offlineStoreProductRowInit(grid, row){
+        var checkbox = $(row).getElementsByClassName('checkbox')[0];
+        var position = $(row).getElementsByClassName('input-text')[0];
+
+        if(checkbox && position){
+            checkbox.positionElement = position;
+            position.checkboxElement = checkbox;
+            position.disabled = !checkbox.checked;
+            position.tabIndex = tabIndex++;
+            Event.observe(position,'keyup', positionChange);
+        }
+    }
+
     <?php echo $this->getJsObjectName() ?> = new varienGrid('<?php echo $this->getId() ?>', '<?php echo $this->getGridUrl() ?>', '<?php echo $this->getVarNamePage() ?>', '<?php echo $this->getVarNameSort() ?>', '<?php echo $this->getVarNameDir() ?>', '<?php echo $this->getVarNameFilter() ?>');
     <?php echo $this->getJsObjectName() ?>.useAjax = '<?php echo $this->getUseAjax() ?>';
 
-        <?php echo $this->getJsObjectName() ?>.rowClickCallback = 'offlineStoreProductRowClick';
-        <?php echo $this->getJsObjectName() ?>.checkboxCheckCallback = 'registerOfflineStoreProduct';
+    <?php echo $this->getJsObjectName() ?>.rowClickCallback = offlineStoreProductRowClick;
+    <?php echo $this->getJsObjectName() ?>.checkboxCheckCallback = registerOfflineStoreProduct;
+
+    <?php echo $this->getJsObjectName() ?>.initRowCallback = offlineStoreProductRowInit;
+    <?php echo $this->getJsObjectName() ?>.rows.each(function(row){
+        offlineStoreProductRowInit(<?php echo $this->getJsObjectName() ?>, row)
+    });
 
     <?php if($this->getCheckboxCheckCallback()): ?>
-        <?php echo $this->getJsObjectName() ?>.checkboxCheckCallback = <?php echo $this->getCheckboxCheckCallback() ?>;
+    <?php echo $this->getJsObjectName() ?>.checkboxCheckCallback = <?php echo $this->getCheckboxCheckCallback() ?>;
     <?php endif; ?>
-    <?php if($this->getRowInitCallback()): ?>
-        <?php echo $this->getJsObjectName() ?>.initRowCallback = <?php echo $this->getRowInitCallback() ?>;
-        <?php echo $this->getJsObjectName() ?>.initGridRows();
-    <?php endif; ?>
+
     <?php if($this->getMassactionBlock()->isAvailable()): ?>
     <?php echo $this->getMassactionBlock()->getJavaScript() ?>
     <?php endif ?>

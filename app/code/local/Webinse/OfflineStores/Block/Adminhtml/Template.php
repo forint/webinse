@@ -55,4 +55,9 @@ class Webinse_OfflineStores_Block_Adminhtml_Template extends Mage_Core_Block_Tem
         Mage::dispatchEvent('adminhtml_block_html_before', array('block' => $this));
         return parent::_toHtml();
     }
+
+    public function getJsObjectName()
+    {
+        return 'offlinestore';
+    }
 }

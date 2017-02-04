@@ -34,37 +34,40 @@ class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tab_Attributes ex
             ));
 
             $attributes = $this->getGroupAttributes();
-
             $this->_setFieldset($attributes, $fieldset, array('gallery'));
+            $this->_addElementTypes($fieldset);
 
-
-            $urlKey = $form->getElement('url_key');
-            if ($urlKey) {
-                $urlKey->setRenderer(
-                    $this->getLayout()->createBlock('adminhtml/catalog_form_renderer_attribute_urlkey')
-                );
+            $regionElement = $form->getElement('region');
+            if ($regionElement) {
+                $isRequired = Mage::helper('directory')->isRegionRequired(Mage::registry('offlinestore')->getCountryId());
+                $regionElement->setRequired($isRequired);
+                $regionElement->setRenderer(Mage::getModel('adminhtml/customer_renderer_region'));
             }
 
-            $tierPrice = $form->getElement('tier_price');
-            if ($tierPrice) {
-                $tierPrice->setRenderer(
-                    $this->getLayout()->createBlock('adminhtml/catalog_product_edit_tab_price_tier')
-                );
+            $regionElement = $form->getElement('region_id');
+            if ($regionElement) {
+                $regionElement->setNoDisplay(true);
             }
 
-            $groupPrice = $form->getElement('group_price');
-            if ($groupPrice) {
-                $groupPrice->setRenderer(
-                    $this->getLayout()->createBlock('adminhtml/catalog_product_edit_tab_price_group')
-                );
+            $country = $form->getElement('country_id');
+            if ($country) {
+                $country->addClass('countries');
             }
 
-            $recurringProfile = $form->getElement('recurring_profile');
-            if ($recurringProfile) {
-                $recurringProfile->setRenderer(
-                    $this->getLayout()->createBlock('adminhtml/catalog_product_edit_tab_price_recurring')
-                );
-            }
+            // Add image renderer
+            $image = $form->getElement('image');
+            $form->setRenderer(Mage::getBlockSingleton('webinseofflinestores/adminhtml_offlinestores_form_element_image'));
+            //$image->setRendere();
+            /*print_r('<pre>');
+            print_r(get_class_methods($image));
+            print_r('</pre>');
+            die;*/
+            /*$fieldset->addField('image', 'image', array(
+                'label' => Mage::helper('webinseofflinestores')->__('Image'),
+                'name'  => 'image'
+            ));*/
+
+
 
             // Add new attribute button if it is not an image tab
             if (!$form->getElement('media_gallery')
@@ -81,10 +84,6 @@ class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tab_Attributes ex
                     ->setProductId($form->getDataObject()->getId());
 
                 $fieldset->setHeaderBar($headerBar->toHtml());
-            }
-
-            if ($form->getElement('meta_description')) {
-                $form->getElement('meta_description')->setOnkeyup('checkMaxLength(this, 255);');
             }
 
             $values = Mage::registry('offlinestore')->getData();
@@ -123,9 +122,6 @@ class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tab_Attributes ex
     protected function _getAdditionalElementTypes()
     {
         $result = array(
-            'price'    => Mage::getConfig()->getBlockClassName('adminhtml/catalog_product_helper_form_price'),
-            'weight'   => Mage::getConfig()->getBlockClassName('adminhtml/catalog_product_helper_form_weight'),
-            'gallery'  => Mage::getConfig()->getBlockClassName('adminhtml/catalog_product_helper_form_gallery'),
             'image'    => Mage::getConfig()->getBlockClassName('adminhtml/catalog_product_helper_form_image'),
             'boolean'  => Mage::getConfig()->getBlockClassName('adminhtml/catalog_product_helper_form_boolean'),
             'textarea' => Mage::getConfig()->getBlockClassName('adminhtml/catalog_helper_form_wysiwyg')
@@ -141,4 +137,5 @@ class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tab_Attributes ex
 
         return $result;
     }
+
 }

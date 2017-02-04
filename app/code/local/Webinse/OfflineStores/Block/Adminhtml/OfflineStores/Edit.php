@@ -5,11 +5,13 @@ class Webinse_OfflineStores_Block_Adminhtml_OfflineStores_Edit extends Mage_Admi
 
     public function __construct()
     {
+        parent::__construct();
+
         $this->_objectId   = 'offlinestore_id';
         $this->_controller = 'adminhtml_offlinestores';
-        $this->_blockGroup = 'webinseofflinestores';//offlinestores_admin
+        $this->_blockGroup = 'webinseofflinestores';
 
-        parent::__construct();
+        $this->setTemplate('offlinestores/widget/form/container.phtml');
 
         $this->_updateButton('save', 'label', Mage::helper('customer')->__('Save Offline Store'));
         $this->_updateButton('delete', 'label', Mage::helper('customer')->__('Delete Offline Store'));

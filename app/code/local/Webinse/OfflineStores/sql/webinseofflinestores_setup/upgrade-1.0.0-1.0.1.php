@@ -28,12 +28,12 @@ $table = $installer->getConnection()
     ->addIndex($installer->getIdxName('webinseofflinestores/offlinestores_product', array('product_id')),
         array('product_id'))
     ->addForeignKey($installer->getFkName('webinseofflinestores/offlinestores_product', 'offlinestore_id', 'webinseofflinestores/table_offlinestores', 'entity_id'),
-        'offlinestore_id', $installer->getTable('catalog/category'), 'entity_id',
+        'offlinestore_id', $installer->getTable('webinseofflinestores/table_offlinestores'), 'entity_id',
         Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE)
-    ->addForeignKey($installer->getFkName('webinseofflinestores/offlinestores_product', 'product_id', 'webinseofflinestores/table_offlinestores', 'entity_id'),
+    ->addForeignKey($installer->getFkName('webinseofflinestores/offlinestores_product', 'product_id', 'catalog/product', 'entity_id'),
         'product_id', $installer->getTable('catalog/product'), 'entity_id',
         Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE)
-    ->setComment('Catalog Product To Category Linkage Table');
+    ->setComment('Product To Offline Store Linkage Table');
 $installer->getConnection()->createTable($table);
 
 $installer->endSetup();

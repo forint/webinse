@@ -133,7 +133,7 @@ class Webinse_OfflineStores_Block_Adminhtml_OfflineStores_Edit_Tab_Product_Grid 
             $this->addColumn('in_offlinestore', array(
                 'header_css_class' => 'a-center',
                 'type'      => 'checkbox',
-                'name'      => 'in_offlinestore',
+                'name'      => 'inofflinestore',
                 'values'    => $this->_getSelectedProducts(),
                 'align'     => 'center',
                 'index'     => 'entity_id'
@@ -262,6 +262,15 @@ class Webinse_OfflineStores_Block_Adminhtml_OfflineStores_Edit_Tab_Product_Grid 
                 'index'     => 'stores',
             ));
 
+        $this->addColumn('position', array(
+            'header'    => Mage::helper('catalog')->__('Position'),
+            'width'     => '1',
+            'type'      => 'number',
+            'index'     => 'position',
+            'editable'  => true //!$this->getCategory()->getProductsReadonly()
+            //'renderer'  => 'adminhtml/widget_grid_column_renderer_input'
+        ));
+
         if (Mage::helper('catalog')->isModuleEnabled('Mage_Rss')) {
             $this->addRssList('rss/catalog/notifystock', Mage::helper('catalog')->__('Notify Low Stock RSS'));
         }
@@ -315,5 +324,14 @@ class Webinse_OfflineStores_Block_Adminhtml_OfflineStores_Edit_Tab_Product_Grid 
     public function getJsObjectName()
     {
         return $this->getId().'JsObject';
+    }
+
+    public function getProductsJson()
+    {
+        Mage::Log(get_class($this->getOfflineStore()),null,'products.log');
+        if (!empty($products)) {
+            return Mage::helper('core')->jsonEncode($products);
+        }
+        return '{}';
     }
 }

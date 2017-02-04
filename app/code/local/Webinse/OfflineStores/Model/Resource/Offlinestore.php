@@ -26,7 +26,6 @@ class Webinse_OfflineStores_Model_Resource_Offlinestore extends Mage_Eav_Model_E
         $this->_offlinestoreProductTable = $this->getTable('webinseofflinestores/offlinestores_product');
     }
 
-
     /**
      * Retrieve customer entity default attributes
      *
@@ -46,176 +45,105 @@ class Webinse_OfflineStores_Model_Resource_Offlinestore extends Mage_Eav_Model_E
     }
 
     /**
-     * Check customer scope, email and confirmation key before saving
+     * Save category products relation
      *
-     * @param Mage_Customer_Model_Customer $customer
-     * @throws Mage_Customer_Exception
-     * @return Mage_Customer_Model_Resource_Customer
+     * @param Mage_Catalog_Model_Category $category
+     * @return Mage_Catalog_Model_Resource_Category
      */
-    protected function _beforeSave(Varien_Object $offlineStore)
+    public function _saveOfflineStoreProducts($offlinestore)
     {
-        parent::_beforeSave($offlineStore);
+        $offlinestore->setIsChangedProductList(false);
+        $id = $offlinestore->getEntityId();
 
-        $offlineStore->setData('posiiton', $offlineStore->getData('disposition'));
         /**
-         * Check if declared category ids in object data.
+         * new category-product relationships
          */
-        /*if ($object->hasCategoryIds()) {
-            $categoryIds = Mage::getResourceSingleton('catalog/category')->verifyIds(
-                $object->getCategoryIds()
+        $products = $offlinestore->getPostedProducts();
+        /**
+         * Example re-save category
+         */
+        if ($products === null) {
+            return $this;
+        }
+
+        /**
+         * old category-product relationships
+         */
+        $oldProducts = $offlinestore->getProductsPosition();
+        if (!$oldProducts){
+            $insert = array_diff_key($products, $oldProducts);
+        }else{
+            $insert = $products;
+        }
+        $delete = array_diff_key($oldProducts, $products);
+
+        /**
+         * Find product ids which are presented in both arrays
+         * and saved before (check $oldProducts array)
+         */
+        $update = array_intersect_key($products, $oldProducts);
+        $update = array_diff_assoc($update, $oldProducts);
+
+        $adapter = $this->_getWriteAdapter();
+
+        /**
+         * Delete products from offline store
+         */
+        if (!empty($delete)) {
+            $cond = array(
+                'product_id IN(?)' => array_keys($delete),
+                'offlinestore_id=?' => $id
             );
-            $object->setCategoryIds($categoryIds);
-        }*/
-
-        return $this;
-
-    }
-
-    /**
-     * Save customer addresses and set default addresses in attributes backend
-     *
-     * @param Varien_Object $customer
-     * @return Mage_Eav_Model_Entity_Abstract
-     */
-    protected function _afterSave(Varien_Object $customer)
-    {
-        // $this->_saveAddresses($customer);
-        return parent::_afterSave($customer);
-    }
-
-    /**
-     * Save/delete customer address
-     *
-     * @param Mage_Customer_Model_Customer $customer
-     * @return Mage_Customer_Model_Resource_Customer
-     */
-    protected function _saveAddresses(Mage_Customer_Model_Customer $customer)
-    {
-        $defaultBillingId   = $customer->getData('default_billing');
-        $defaultShippingId  = $customer->getData('default_shipping');
-        foreach ($customer->getAddresses() as $address) {
-            if ($address->getData('_deleted')) {
-                if ($address->getId() == $defaultBillingId) {
-                    $customer->setData('default_billing', null);
-                }
-                if ($address->getId() == $defaultShippingId) {
-                    $customer->setData('default_shipping', null);
-                }
-                $address->delete();
-            } else {
-                $address->setParentId($customer->getId())
-                    ->setStoreId($customer->getStoreId())
-                    ->setIsCustomerSaveTransaction(true)
-                    ->save();
-                if (($address->getIsPrimaryBilling() || $address->getIsDefaultBilling())
-                    && $address->getId() != $defaultBillingId
-                ) {
-                    $customer->setData('default_billing', $address->getId());
-                }
-                if (($address->getIsPrimaryShipping() || $address->getIsDefaultShipping())
-                    && $address->getId() != $defaultShippingId
-                ) {
-                    $customer->setData('default_shipping', $address->getId());
-                }
-            }
-        }
-        if ($customer->dataHasChangedFor('default_billing')) {
-            $this->saveAttribute($customer, 'default_billing');
-        }
-        if ($customer->dataHasChangedFor('default_shipping')) {
-            $this->saveAttribute($customer, 'default_shipping');
+            $adapter->delete($this->_offlinestoreProductTable, $cond);
         }
 
-        return $this;
-    }
-
-    /**
-     * Retrieve select object for loading base entity row
-     *
-     * @param Varien_Object $object
-     * @param mixed $rowId
-     * @return Varien_Db_Select
-     */
-    protected function _getLoadRowSelect($object, $rowId)
-    {
-        $select = parent::_getLoadRowSelect($object, $rowId);
-        if ($object->getWebsiteId() && $object->getSharingConfig()->isWebsiteScope()) {
-            $select->where('website_id =?', (int)$object->getWebsiteId());
-        }
-
-        return $select;
-    }
-
-    /**
-     * Load customer by email
-     *
-     * @throws Mage_Core_Exception
-     *
-     * @param Mage_Customer_Model_Customer $customer
-     * @param string $email
-     * @param bool $testOnly
-     * @return Mage_Customer_Model_Resource_Customer
-     */
-    public function loadByEmail(Mage_Customer_Model_Customer $customer, $email, $testOnly = false)
-    {
-        $adapter = $this->_getReadAdapter();
-        $bind    = array('customer_email' => $email);
-        $select  = $adapter->select()
-            ->from($this->getEntityTable(), array($this->getEntityIdField()))
-            ->where('email = :customer_email');
-
-        if ($customer->getSharingConfig()->isWebsiteScope()) {
-            if (!$customer->hasData('website_id')) {
-                Mage::throwException(
-                    Mage::helper('customer')->__('Customer website ID must be specified when using the website scope')
+        /**
+         * Add products to offline store
+         */
+        if (!empty($insert)) {
+            $data = array();
+            foreach ($insert as $productId => $position) {
+                $data[] = array(
+                    'offlinestore_id' => (int)$id,
+                    'product_id'  => (int)$productId,
+                    'position'    => (int)$position
                 );
             }
-            $bind['website_id'] = (int)$customer->getWebsiteId();
-            $select->where('website_id = :website_id');
+            $adapter->insertMultiple($this->_offlinestoreProductTable, $data);
         }
 
-        $customerId = $adapter->fetchOne($select, $bind);
-        if ($customerId) {
-            $this->load($customer, $customerId);
-        } else {
-            $customer->setData(array());
+        /**
+         * Update product positions in offline store
+         */
+        if (!empty($update)) {
+            foreach ($update as $productId => $position) {
+                $where = array(
+                    'offlinestore_id = ?'=> (int)$id,
+                    'product_id = ?' => (int)$productId
+                );
+                $bind  = array('position' => (int)$position);
+                $adapter->update($this->_offlinestoreProductTable, $bind, $where);
+            }
         }
 
+        if (!empty($insert) || !empty($delete)) {
+            $productIds = array_unique(array_merge(array_keys($insert), array_keys($delete)));
+            Mage::dispatchEvent('offlinestore_change_products', array(
+                'offlinestore'      => $offlinestore,
+                'product_ids'       => $productIds
+            ));
+        }
+
+        if (!empty($insert) || !empty($update) || !empty($delete)) {
+            $offlinestore->setIsChangedProductList(true);
+
+            /**
+             * Setting affected products to category for third party engine index refresh
+             */
+            $productIds = array_keys($insert + $delete + $update);
+            $offlinestore->setAffectedProductIds($productIds);
+        }
         return $this;
-    }
-
-    /**
-     * Change customer password
-     *
-     * @param Mage_Customer_Model_Customer $customer
-     * @param string $newPassword
-     * @return Mage_Customer_Model_Resource_Customer
-     */
-    public function changePassword(Mage_Customer_Model_Customer $customer, $newPassword)
-    {
-        $customer->setPassword($newPassword);
-        $this->saveAttribute($customer, 'password_hash');
-        return $this;
-    }
-
-    /**
-     * Check whether there are email duplicates of customers in global scope
-     *
-     * @return bool
-     */
-    public function findEmailDuplicates()
-    {
-        $adapter = $this->_getReadAdapter();
-        $select  = $adapter->select()
-            ->from($this->getTable('customer/entity'), array('email', 'cnt' => 'COUNT(*)'))
-            ->group('email')
-            ->order('cnt DESC')
-            ->limit(1);
-        $lookup = $adapter->fetchRow($select);
-        if (empty($lookup)) {
-            return false;
-        }
-        return $lookup['cnt'] > 1;
     }
 
     /**
@@ -299,12 +227,11 @@ class Webinse_OfflineStores_Model_Resource_Offlinestore extends Mage_Eav_Model_E
      */
     public function getProductsPosition($offlineStore)
     {
-
         $select = $this->_getWriteAdapter()->select()
             ->from($this->_offlinestoreProductTable, array('product_id', 'position'))
             ->where('offlinestore_id = :offlinestore_id');
 
-        $bind = array('offlinestore_id' => (int)$offlineStore->getId());
+        $bind = array('offlinestore_id' => (int)$offlineStore->getEntityId());
 
         return $this->_getWriteAdapter()->fetchPairs($select, $bind);
     }

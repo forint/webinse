@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Webinse_OfflineStores>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
         </Webinse_OfflineStores>
     </modules>
     <frontend>
@@ -97,17 +97,17 @@
                 <title>Offline Stores</title>
                 <sort_order>88</sort_order>
                 <children translate="title" module="webinseofflinestores">
-                    <webinseofflinestores_add translate="title" module="webinseofflinestores"><!-- this is the submenu item -->
+                    <webinseofflinestores_add translate="title" module="webinseofflinestores">
                         <title>Add Offline Store</title>
                         <action>webinseofflinestores_admin/adminhtml_offlinestores/new</action>
                         <sort_order>20</sort_order>
                     </webinseofflinestores_add>
-                    <webinseofflinestores_view translate="title" module="webinseofflinestores"><!-- this is the submenu item -->
+                    <webinseofflinestores_view translate="title" module="webinseofflinestores">
                         <title>View Offline Stores</title>
                         <action>webinseofflinestores_admin/adminhtml_offlinestores/index</action>
                         <sort_order>10</sort_order>
                     </webinseofflinestores_view>
-                    <webinseofflinestores_preferences translate="title" module="webinseofflinestores"><!-- this is the submenu item -->
+                    <webinseofflinestores_preferences translate="title" module="webinseofflinestores">
                         <title>Settings</title>
                         <action>webinseofflinestores_admin/adminhtml_offlinestores/settings</action>
                         <sort_order>30</sort_order>
@@ -158,15 +158,5 @@
                 </webinseofflinestores>
             </updates>
         </layout>
-        <!--<events>
-            <adminhtml_widget_container_html_before>
-                <observers>
-                    <webinseofflinestores>
-                        <class>Webinse_OfflineStores_Model_Observer</class>
-                        <method>addButtonTest</method>
-                    </webinseofflinestores>
-                </observers>
-            </adminhtml_widget_container_html_before>
-        </events>-->
     </adminhtml>
 </config>

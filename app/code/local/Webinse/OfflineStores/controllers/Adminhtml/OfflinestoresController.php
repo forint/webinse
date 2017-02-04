@@ -1,9 +1,15 @@
 <?php
 class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Adminhtml_Controller_Action
 {
+    /**
+     * Initialize Ofline Store Entity
+     *
+     * @param string $idFieldName
+     * @return false|Mage_Core_Model_Abstract
+     */
     protected function _initOfflinestore($idFieldName = 'id')
     {
-        $this->_title($this->__('Manage Offline Stores'))->_title($this->__('Manage Offline Stores'));
+        $this->_title($this->__('Manage Offline Stores'));
 
         $offlineStoreId = (int) $this->getRequest()->getParam($idFieldName);
         $offlineStore = Mage::getModel('webinseofflinestores/offlinestore');
@@ -16,6 +22,9 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
         return $offlineStore;
     }
 
+    /**
+     * Index Action
+     */
     public function indexAction()
     {
         $this->loadLayout();
@@ -92,13 +101,22 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
         $isEdit         = (int)($this->getRequest()->getParam('id') != null);
 
         $data = $this->getRequest()->getPost();
+
         if ($data) {
+
             $offlineStore = $this->_initOfflineStoreSave();
+
+            if(isset($data['in_offlinestore_products']) && !$offlineStore->getProductsReadonly()){
+                $products = Mage::helper('core/string')->parseQueryStr($data['in_offlinestore_products']);
+                $offlineStore->setPostedProducts($products);
+            }
 
             try {
                 $offlineStore->save();
+                $offlineStore->getResource()->_saveOfflineStoreProducts($offlineStore);
 
                 $offlineStoreId = $offlineStore->getId();
+                $offlineStore->saveImage($offlineStoreId);
 
                 if (isset($data['copy_to_stores'])) {
                     $this->_copyAttributesBetweenStores($data['copy_to_stores'], $offlineStoreId);
@@ -118,19 +136,39 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
 
         if ($redirectBack) {
             $this->_redirect('*/*/edit', array(
-                'id'    => $productId,
+                'id'    => $offlineStoreId,
                 '_current'=>true
             ));
         } elseif($this->getRequest()->getParam('popup')) {
             $this->_redirect('*/*/created', array(
                 '_current'   => true,
-                'id'         => $productId,
+                'id'         => $offlineStoreId,
                 'edit'       => $isEdit
             ));
         } else {
             $this->_redirect('*/*/', array('store'=>$storeId));
         }
 
+    }
+
+    /**
+     * Delete offlinestore action
+     */
+    public function deleteAction()
+    {
+        $this->_initOfflinestore();
+        $offlineStore = Mage::registry('offlinestore');
+        if ($offlineStore->getId()) {
+            try {
+                $offlineStore->load($offlineStore->getId());
+                $offlineStore->delete();
+                Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->__('The customer has been deleted.'));
+            }
+            catch (Exception $e){
+                Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+            }
+        }
+        $this->_redirect('*/adminhtml_offlinestores');
     }
 
     /**
