@@ -67,7 +67,6 @@ class Webinse_OfflineStores_Block_Widget_Catalog extends Mage_Core_Block_Templat
     {
         /** @var $collection Webinse_OfflineStores_Model_Resource_Offlinestore */
         $collection = Mage::getResourceModel('webinseofflinestores/offlinestore_collection');
-        var_dump(count($collection));die;
 
         $collection = $collection
             //->addStoreFilter()
@@ -99,7 +98,9 @@ class Webinse_OfflineStores_Block_Widget_Catalog extends Mage_Core_Block_Templat
         return $this->_getOfflineStoreCollection();
     }
 
-
+    public function getMode(){
+        return Mage::helper('webinseofflinestores')->getMode();
+    }
 
 
 

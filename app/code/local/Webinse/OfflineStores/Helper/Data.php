@@ -1,6 +1,15 @@
 <?php
 class Webinse_OfflineStores_Helper_Data extends Mage_Core_Helper_Abstract
 {
+    /**
+     * Default value for count offline stores in setting
+     */
+    private $_perpage = '20';
+
+    /**
+     * Default value for display offline store in setting (0 - list, 1 - grid)
+     */
+    private $_appearance = '0';
 
     /**
      * Attribute Tab block name for Offlinestore edit
@@ -34,7 +43,7 @@ class Webinse_OfflineStores_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function getMode()
     {
-        return Mage::getStoreConfig('offlinestores/offlinestoresgroup/offlinestoreappearance');
+        return Mage::getStoreConfig('general/offlinestoresgroup/offlinestoreappearance');
     }
 
     public function getOfflineStoresPerPage()

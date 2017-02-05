@@ -30,6 +30,13 @@
     <webinseofflinestores_admin_adminhtml_offlinestores_index>
         <referense name="head">
             <action method="setTitle" translate="title"><title>Offline Stores</title></action>
+            <action method="setCanLoadExtJs"><flag>1</flag></action>
+            <action method="setCanLoadTinyMce"><flag>1</flag></action>
+            <action method="addItem"><type>js</type><name>mage/adminhtml/wysiwyg/tiny_mce/setup.js</name></action>
+            <action method="addJs"><script>mage/adminhtml/wysiwyg/widget.js</script></action>
+            <action method="addItem"><type>js</type><name>prototype/window.js</name></action>
+            <action method="addItem"><type>js_css</type><name>prototype/windows/themes/default.css</name></action>
+            <action method="addCss"><name>lib/prototype/windows/themes/magento.css</name></action>
         </referense>
         <reference name="content">
             <block type="webinseofflinestores/adminhtml_offlinestores" name="offlinestores_list">
@@ -37,6 +44,10 @@
                     <action method="setUseConfirm"><params>0</params></action>
                 </block>
             </block>
+        </reference>
+        <reference name="js">
+            <block type="webinseofflinestores/adminhtml_template" template="offlinestores/edit/js.phtml" name="offlinestore.edit.js" as="offlinestore_edit_js"></block>
+            <block type="core/template" template="catalog/wysiwyg/js.phtml"/>
         </reference>
     </webinseofflinestores_admin_adminhtml_offlinestores_index>
 
@@ -60,19 +71,10 @@
                 </block>
             </block>
         </reference>
-
         <reference name="js">
             <block type="webinseofflinestores/adminhtml_template" template="offlinestores/edit/js.phtml" name="offlinestore.edit.js" as="offlinestore_edit_js"></block>
             <block type="core/template" template="catalog/wysiwyg/js.phtml"/>
         </reference>
-        <!--<reference name="js">
-            <block type="adminhtml/catalog_product_edit_js" template="catalog/product/js.phtml" name="catalog_product_js"></block>
-            <block type="core/template" template="catalog/wysiwyg/js.phtml"/>
-        </reference>-->
-       <!-- <reference name="js">
-            <block type="webinseofflinestores/adminhtml_template" template="offlinestores/edit/js.phtml" name="offlinestore.edit.js" as="offlinestore_edit_js"></block>
-            <block type="core/template" template="catalog/wysiwyg/js.phtml"/>
-        </reference>-->
     </webinseofflinestores_admin_adminhtml_offlinestores_edit>
 
     <webinseofflinestores_admin_adminhtml_offlinestores_new>

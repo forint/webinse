@@ -79,6 +79,14 @@
                 </observers>
             </controller_front_init_routers>
         </events>
+        <!-- It's Offline Store Rewrite Url Model -->
+        <offlinestore>
+            <product>
+                <url>
+                    <model>webinseofflinestores/offlinestore_url</model>
+                </url>
+            </product>
+        </offlinestore>
     </global>
     <admin>
         <routers>

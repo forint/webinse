@@ -29,6 +29,13 @@ class Webinse_OfflineStores_Model_Offlinestore extends Mage_Core_Model_Abstract
      */
     protected $_attributes;
 
+    /**
+     * Offline Store Url Instance
+     *
+     * @var Mage_Catalog_Model_Offlinestore_Url
+     */
+    protected $_urlModel = null;
+
     protected $_eventPrefix = 'webinse_offlinestores';
 
     /**
@@ -266,5 +273,28 @@ class Webinse_OfflineStores_Model_Offlinestore extends Mage_Core_Model_Abstract
                 @unlink(Mage::helper('webinseofflinestores')->getImagePath($entityId));
             }
         }
+    }
+
+    /**
+     * Retrieve offline store URL
+     *
+     * @param  bool $useSid
+     * @return string
+     */
+    public function getOfflineStoreUrl($useSid = null)
+    {
+        return $this->getUrlModel()->getOfflineStoreUrl($this, $useSid);
+    }
+    /**
+     * Get offline store url model
+     *
+     * @return Mage_Catalog_Model_Offlinestore_Url
+     */
+    public function getUrlModel()
+    {
+        if ($this->_urlModel === null) {
+            $this->_urlModel = Mage::getSingleton('webinseofflinestores/factory')->getOfflineStoreUrlInstance();
+        }
+        return $this->_urlModel;
     }
 }
