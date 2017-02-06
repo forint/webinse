@@ -283,7 +283,7 @@ class Webinse_OfflineStores_Model_Offlinestore extends Mage_Core_Model_Abstract
      */
     public function getOfflineStoreUrl($useSid = null)
     {
-        return $this->getUrlModel()->getOfflineStoreUrl($this, $useSid);
+        return $this->getUrlModel()->getOfflineStoreUrl($this);
     }
     /**
      * Get offline store url model

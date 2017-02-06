@@ -1,21 +1,12 @@
 <?php
-class Webinse_OfflineStores_Model_Offlinestore_Url extends Varien_Object
+class Webinse_OfflineStores_Model_Offlinestore_Url
 {
-    const CACHE_TAG = 'url_rewrite';
-
     /**
-     * URL instance
+     * Url instance
      *
      * @var Mage_Core_Model_Url
      */
-    protected  $_url;
-
-    /**
-     * URL Rewrite Instance
-     *
-     * @var Mage_Core_Model_Url_Rewrite
-     */
-    protected $_urlRewrite;
+    protected $_url;
 
     /**
      * Factory instance
@@ -25,74 +16,11 @@ class Webinse_OfflineStores_Model_Offlinestore_Url extends Varien_Object
     protected $_factory;
 
     /**
-     * @var Mage_Core_Model_Store
-     */
-    protected $_store;
-
-    /**
-     * Retrieve Offline Store URL
+     * Url rewrite instance
      *
-     * @param  Webinse_OfflineStores_Model_Offlinestore $offlineStore
-     * @param  bool $useSid forced SID mode
-     * @return string
+     * @var Mage_Core_Model_Url_Rewrite
      */
-    public function getOfflineStoreUrl($offlineStore, $useSid = null)
-    {
-        if ($useSid === null) {
-            $useSid = Mage::app()->getUseSessionInUrl();
-        }
-
-        $params = array();
-        if (!$useSid) {
-            $params['_nosid'] = true;
-        }
-
-        return $this->getUrl($offlineStore, $params);
-    }
-
-
-    /**
-     * Retrieve Offline Store URL using UrlDataObject
-     *
-     * @param Webinse_OfflineStores_Model_Offlinestore $product
-     * @param array $params
-     * @return string
-     */
-    public function getUrl(Webinse_OfflineStores_Model_Offlinestore $offlineStore, $params = array())
-    {
-        $url = $offlineStore->getData('url');
-        if (!empty($url)) {
-            return $url;
-        }
-
-        $requestPath = $offlineStore->getData('request_path');
-        var_dump($requestPath);die;
-        if (empty($requestPath)) {
-            $requestPath = $this->_getRequestPath($offlineStore, $this->_getCategoryIdForUrl($offlineStore, $params));
-            $offlineStore->setRequestPath($requestPath);
-        }
-
-        if (isset($params['_store'])) {
-            $storeId = $this->_getStoreId($params['_store']);
-        } else {
-            $storeId = $offlineStore->getStoreId();
-        }
-
-        if ($storeId != $this->_getStoreId()) {
-            $params['_store_to_url'] = true;
-        }
-
-        // reset cached URL instance GET query params
-        if (!isset($params['_query'])) {
-            $params['_query'] = array();
-        }
-
-        $this->getUrlInstance()->setStore($storeId);
-        $offlineStoreUrl = $this->_getProductUrl($offlineStore, $requestPath, $params);
-        $offlineStore->setData('url', $offlineStoreUrl);
-        return $offlineStore->getData('url');
-    }
-
+    protected $_urlRewrite;
 
     /**
      * Initialize Url model
@@ -102,24 +30,102 @@ class Webinse_OfflineStores_Model_Offlinestore_Url extends Varien_Object
     public function __construct(array $args = array())
     {
         $this->_factory = !empty($args['factory']) ? $args['factory'] : Mage::getSingleton('catalog/factory');
-        $this->_store = !empty($args['store']) ? $args['store'] : Mage::app()->getStore();
     }
 
     /**
-     * Retrieve URL Instance
+     * Retrieve Url for specified offline store
+     *
+     * @param Webinse_OfflineStores_Model_Offlinestore $offlinestore
+     * @return string
+     */
+    public function getOfflineStoreUrl(Webinse_OfflineStores_Model_Offlinestore $offlineStore)
+    {
+        $url = $offlineStore->getData('url');
+
+        if (null !== $url) {
+            return $url;
+        }
+
+        Varien_Profiler::start('REWRITE: '.__METHOD__);
+
+        if ($offlineStore->hasData('request_path') && $offlineStore->getData('request_path') != '') {
+            $offlineStore->setData('url', $this->_getDirectUrl($offlineStore));
+            Varien_Profiler::stop('REWRITE: '.__METHOD__);
+            return $offlineStore->getData('url');
+        }
+
+        $requestPath = $this->_getRequestPath($offlineStore);
+        if ($requestPath) {
+            $offlineStore->setRequestPath($requestPath);
+            $offlineStore->setData('url', $this->_getDirectUrl($offlineStore));
+            Varien_Profiler::stop('REWRITE: '.__METHOD__);
+            return $offlineStore->getData('url');
+        }
+
+        Varien_Profiler::stop('REWRITE: '.__METHOD__);
+
+        $offlineStore->setData('url', $offlineStore->getCategoryIdUrl());
+        return $offlineStore->getData('url');
+    }
+
+    /**
+     * Retrieve request path
+     *
+     * @param Webinse_OfflineStores_Model_Offlinestore $category
+     * @return bool|string
+     */
+    protected function _getRequestPath(Webinse_OfflineStores_Model_Offlinestore $offlineStore)
+    {
+        $rewrite = $this->getUrlRewrite();
+        $storeId = $offlineStore->getStoreId();
+        if ($storeId) {
+            $rewrite->setStoreId($storeId);
+        }
+        $idPath = 'offlinestore/' . $offlineStore->getId();
+        var_dump($idPath);die;
+        $rewrite->loadByIdPath($idPath);
+        if ($rewrite->getId()) {
+            return $rewrite->getRequestPath();
+        }
+        return false;
+    }
+
+
+
+
+
+
+
+
+
+
+    /**
+     * Returns category URL by which it can be accessed
+     * @param Mage_Catalog_Model_Category $category
+     * @return string
+     */
+    protected function _getDirectUrl(Mage_Catalog_Model_Category $category)
+    {
+        return $this->getUrlInstance()->getDirectUrl($category->getRequestPath());
+    }
+
+
+
+    /**
+     * Retrieve Url instance
      *
      * @return Mage_Core_Model_Url
      */
     public function getUrlInstance()
     {
         if (null === $this->_url) {
-            $this->_url = Mage::getModel('core/url');
+            $this->_url = $this->_factory->getModel('core/url');
         }
         return $this->_url;
     }
 
     /**
-     * Retrieve URL Rewrite Instance
+     * Retrieve Url rewrite instance
      *
      * @return Mage_Core_Model_Url_Rewrite
      */
@@ -129,146 +135,5 @@ class Webinse_OfflineStores_Model_Offlinestore_Url extends Varien_Object
             $this->_urlRewrite = $this->_factory->getUrlRewriteInstance();
         }
         return $this->_urlRewrite;
-    }
-
-    /**
-     * 'no_selection' shouldn't be a valid image attribute value
-     *
-     * @param string $image
-     * @return string
-     */
-    protected function _validImage($image)
-    {
-        if($image == 'no_selection') {
-            $image = null;
-        }
-        return $image;
-    }
-
-    /**
-     * Retrieve URL in current store
-     *
-     * @param Mage_Catalog_Model_Product $product
-     * @param array $params the URL route params
-     * @return string
-     */
-    public function getUrlInStore(Mage_Catalog_Model_Product $product, $params = array())
-    {
-        $params['_store_to_url'] = true;
-        return $this->getUrl($product, $params);
-    }
-
-    /**
-     * Format Key for URL
-     *
-     * @param string $str
-     * @return string
-     */
-    public function formatUrlKey($str)
-    {
-        $urlKey = preg_replace('#[^0-9a-z]+#i', '-', Mage::helper('catalog/product_url')->format($str));
-        $urlKey = strtolower($urlKey);
-        $urlKey = trim($urlKey, '-');
-
-        return $urlKey;
-    }
-
-    /**
-     * Retrieve Product Url path (with category if exists)
-     *
-     * @param Mage_Catalog_Model_Product $product
-     * @param Mage_Catalog_Model_Category $category
-     *
-     * @return string
-     */
-    public function getUrlPath($product, $category=null)
-    {
-        $path = $product->getData('url_path');
-
-        if (is_null($category)) {
-            /** @todo get default category */
-            return $path;
-        } elseif (!$category instanceof Mage_Catalog_Model_Category) {
-            Mage::throwException('Invalid category object supplied');
-        }
-
-        return Mage::helper('catalog/category')->getCategoryUrlPath($category->getUrlPath())
-        . '/' . $path;
-    }
-
-
-    /**
-     * Returns checked store_id value
-     *
-     * @param int|null $id
-     * @return int
-     */
-    protected function _getStoreId($id = null)
-    {
-        return Mage::app()->getStore($id)->getId();
-    }
-
-    /**
-     * Check product category
-     *
-     * @param Mage_Catalog_Model_Product $product
-     * @param array $params
-     *
-     * @return int|null
-     */
-    protected function _getCategoryIdForUrl($product, $params)
-    {
-        if (isset($params['_ignore_category'])) {
-            return null;
-        } else {
-            return $product->getCategoryId() && !$product->getDoNotUseCategoryId()
-                ? $product->getCategoryId() : null;
-        }
-    }
-
-    /**
-     * Retrieve product URL based on requestPath param
-     *
-     * @param Mage_Catalog_Model_Product $product
-     * @param string $requestPath
-     * @param array $routeParams
-     *
-     * @return string
-     */
-    protected function _getProductUrl($product, $requestPath, $routeParams)
-    {
-        if (!empty($requestPath)) {
-            return $this->getUrlInstance()->getDirectUrl($requestPath, $routeParams);
-        }
-        $routeParams['id'] = $product->getId();
-        $routeParams['s'] = $product->getUrlKey();
-        $categoryId = $this->_getCategoryIdForUrl($product, $routeParams);
-        if ($categoryId) {
-            $routeParams['category'] = $categoryId;
-        }
-        return $this->getUrlInstance()->getUrl('catalog/product/view', $routeParams);
-    }
-
-    /**
-     * Retrieve request path
-     *
-     * @param Mage_Catalog_Model_Product $product
-     * @param int $categoryId
-     * @return bool|string
-     */
-    protected function _getRequestPath($product, $categoryId)
-    {
-        $idPath = sprintf('product/%d', $product->getEntityId());
-        if ($categoryId) {
-            $idPath = sprintf('%s/%d', $idPath, $categoryId);
-        }
-        $rewrite = $this->getUrlRewrite();
-        $rewrite->setStoreId($product->getStoreId())
-            ->loadByIdPath($idPath);
-        if ($rewrite->getId()) {
-            return $rewrite->getRequestPath();
-        }
-
-        return false;
     }
 }

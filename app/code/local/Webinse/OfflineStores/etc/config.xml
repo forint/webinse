@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Webinse_OfflineStores>
-            <version>1.0.2</version>
+            <version>1.0.3</version>
         </Webinse_OfflineStores>
     </modules>
     <frontend>
@@ -56,6 +56,10 @@
                     <attribute_website>
                         <table>webinse_attribute_website</table>
                     </attribute_website>
+                    <!-- Table for Rewrite  -->
+                    <offlinestore_product_index>
+                        <table>webinse_offlinestore_product_index</table>
+                    </offlinestore_product_index>
                 </entities>
             </webinseofflinestores_resource>
         </models>
