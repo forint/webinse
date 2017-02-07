@@ -66,4 +66,12 @@ class Webinse_OfflineStores_Block_Widget_Offlinestore extends Mage_Core_Block_Te
     public function getMode(){
         return Mage::helper('webinseofflinestores')->getMode();
     }
+
+    /**
+     * Retrieve appearence mode from system configuration
+     * @return mixed
+     */
+    public function getColumnCount(){
+        return Mage::getStoreConfig('offlinestores/offlinestoresgroup/offlinestorecolumncount');
+    }
 }

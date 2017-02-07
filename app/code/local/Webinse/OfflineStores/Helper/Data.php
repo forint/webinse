@@ -43,7 +43,7 @@ class Webinse_OfflineStores_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function getMode()
     {
-        return Mage::getStoreConfig('general/offlinestoresgroup/offlinestoreappearance');
+        return Mage::getStoreConfig('offlinestores/offlinestoresgroup/offlinestoreappearance');
     }
 
     public function getOfflineStoresPerPage()

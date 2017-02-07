@@ -28,6 +28,16 @@
                             <shared>1</shared>
                             <comment>( Numeric value )</comment>
                         </offlinestoresperpage>
+                        <offlinestorecolumncount translate="label">
+                            <label>Offline stores column count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <shared>1</shared>
+                            <comment>( Numeric value )</comment>
+                        </offlinestorecolumncount>
                         <offlinestoreappearance translate="label">
                             <label>Offline stores appearance</label>
                             <sort_order>2</sort_order>

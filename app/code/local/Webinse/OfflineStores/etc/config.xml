@@ -6,15 +6,34 @@
         </Webinse_OfflineStores>
     </modules>
     <frontend>
-        <webinseofflinestores>
-            <use>standard</use>
-            <args>
-                <module>Webinse_OfflineStores</module>
-                <frontName>offlinestores</frontName>
-            </args>
-        </webinseofflinestores>
+        <routers>
+            <webinseofflinestores>
+                <use>standard</use>
+                <args>
+                    <module>Webinse_OfflineStores</module>
+                    <frontName>offlinestores</frontName>
+                </args>
+            </webinseofflinestores>
+        </routers>
+        <layout>
+            <updates>
+                <webinseofflinestores>
+                    <file>webinseofflinestores.xml</file>
+                </webinseofflinestores>
+            </updates>
+        </layout>
     </frontend>
     <global>
+        <events>
+            <controller_front_init_routers>
+                <observers>
+                    <offlinestores>
+                        <class>Webinse_OfflineStores_Controller_Router</class>
+                        <method>initControllerRouters</method>
+                    </offlinestores>
+                </observers>
+            </controller_front_init_routers>
+        </events>
         <resources>
             <webinseofflinestores_setup>
                 <setup>
@@ -73,16 +92,6 @@
                 <class>Webinse_OfflineStores_Block</class>
             </webinseofflinestores>
         </blocks>
-        <events>
-            <controller_front_init_routers>
-                <observers>
-                    <webinseofflinestores>
-                        <class>Webinse_OfflineStores_Controller_Router</class>
-                        <method>initControllerRouters</method>
-                    </webinseofflinestores>
-                </observers>
-            </controller_front_init_routers>
-        </events>
         <!-- It's Offline Store Rewrite Url Model -->
         <offlinestore>
             <product>

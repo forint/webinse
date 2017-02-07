@@ -22,9 +22,8 @@ $_helper = $this->helper('catalog/output');
                 <?php foreach ($_offlineStoreCollection as $_offlineStore): ?>
                     <li class="item<?php if( ++$_iterator == sizeof($_offlineStoreCollection) ): ?> last<?php endif; ?>">
                         <?php // Product Image ?>
-                        <?php var_dump($_offlineStore->getOfflineStoreUrl()); ?>
-                        <?php die('!!!'); ?>
                         <a href="<?php echo $_offlineStore->getOfflineStoreUrl() ?>" title="<?php echo $this->stripTags($this->getImageLabel($_offlineStore, 'small_image'), null, true) ?>" class="product-image">
+
                             <?php /* Based on the native RWD styling, product images are displayed at a max of ~400px wide when viewed on a
                         one column page layout with four product columns from a 1280px viewport. For bandwidth reasons,
                         we are going to serve a 300px image, as it will look fine at 400px and most of the times, the image
@@ -32,6 +31,7 @@ $_helper = $this->helper('catalog/output');
                         This $_imgSize value could even be decreased further, based on the page layout
                         (one column, two column, three column) and number of product columns. */ ?>
                             <?php $_imgSize = 300; ?>
+                            <?php $this->helper('webinseofflinestores/image')->init($_offlineStore, 'small_image'); die('?'); ?>
                             <img id="product-collection-image-<?php echo $_offlineStore->getId(); ?>"
                                  src="<?php echo $this->helper('catalog/image')->init($_offlineStore, 'small_image')->keepFrame(false)->resize($_imgSize); ?>"
                                  alt="<?php echo $this->stripTags($this->getImageLabel($_offlineStore, 'small_image'), null, true) ?>" />

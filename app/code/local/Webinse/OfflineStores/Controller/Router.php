@@ -4,7 +4,7 @@ class Webinse_OfflineStores_Controller_Router extends Mage_Core_Controller_Varie
     public function initControllerRouters($observer)
     {
         $front = $observer->getEvent()->getFront();
-        $front->addRouter('webinseofflinestores',$this);
+        $front->addRouter('webinseofflinestores', $this);
     }
 
     public function match(Zend_Controller_Request_Http $request)
@@ -16,7 +16,8 @@ class Webinse_OfflineStores_Controller_Router extends Mage_Core_Controller_Varie
             if (count($cmd) == 1){
                 return $this->_fillRequest($request);
             }else{
-                $model = Mage::getModel('webinseofflinestores/offlinestore')->load($cmd[1],'link');
+                $model = Mage::getModel('webinseofflinestores/offlinestore')->load($cmd[1]);
+
                 if ($model->getId()){
                     $params = array(
                         'id' => $model->getId()

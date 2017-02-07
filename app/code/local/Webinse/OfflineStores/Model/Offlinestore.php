@@ -1,6 +1,8 @@
 <?php
 class Webinse_OfflineStores_Model_Offlinestore extends Mage_Core_Model_Abstract
 {
+    const DM_PRODUCT            = 'PRODUCTS';
+
     /**
      * Offline store model instance
      *
@@ -334,8 +336,8 @@ class Webinse_OfflineStores_Model_Offlinestore extends Mage_Core_Model_Abstract
         Varien_Profiler::start('REGULAR: '.__METHOD__);
         $urlKey = $this->formatUrlKey($this->getName());
 
-        $url = $this->getUrlInstance()->getUrl('offlinestore/view', array(
-            's'=>$urlKey,
+        $url = $this->getUrlInstance()->getUrl('offlinestores/view', array(
+            'offlinestore'=>$urlKey,
             'id'=>$this->getId(),
         ));
 
