@@ -6,7 +6,6 @@ class Webinse_Offlinestores_Block_Adminhtml_OfflineStores_Edit_Form extends Mage
         parent::_construct();
         $this->setTemplate('offlinestores/widget/form.phtml');
         $this->setDestElementId('offlinestore_edit');
-        $this->setShowGlobalIcon(false);
     }
 
     protected function _prepareForm(){
@@ -22,10 +21,6 @@ class Webinse_Offlinestores_Block_Adminhtml_OfflineStores_Edit_Form extends Mage
             'method' => 'post',
             'enctype'=> 'multipart/form-data'
         ));
-        // var_dump(get_class($form));die;
-        // offlinestores_info_tabs_group_26_content
-        // $fieldset = $form->addFieldset('offlinestores_info_tabs_group_26_content', array('legend' => $this->__('Template')));
-        // $this->_addElementTypes($fieldset);
 
         $formData = array('image' => Mage::helper('webinseofflinestores')->getImageUrl($entityId));
 

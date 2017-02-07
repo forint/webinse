@@ -64,14 +64,14 @@ class Webinse_OfflineStores_Model_Offlinestore_Url
 
         Varien_Profiler::stop('REWRITE: '.__METHOD__);
 
-        $offlineStore->setData('url', $offlineStore->getCategoryIdUrl());
+        $offlineStore->setData('url', $offlineStore->getOfflineStoreIdUrl());
         return $offlineStore->getData('url');
     }
 
     /**
      * Retrieve request path
      *
-     * @param Webinse_OfflineStores_Model_Offlinestore $category
+     * @param Webinse_OfflineStores_Model_Offlinestore $offlineStore
      * @return bool|string
      */
     protected function _getRequestPath(Webinse_OfflineStores_Model_Offlinestore $offlineStore)
@@ -82,34 +82,23 @@ class Webinse_OfflineStores_Model_Offlinestore_Url
             $rewrite->setStoreId($storeId);
         }
         $idPath = 'offlinestore/' . $offlineStore->getId();
-        var_dump($idPath);die;
         $rewrite->loadByIdPath($idPath);
+
         if ($rewrite->getId()) {
             return $rewrite->getRequestPath();
         }
         return false;
     }
 
-
-
-
-
-
-
-
-
-
     /**
-     * Returns category URL by which it can be accessed
-     * @param Mage_Catalog_Model_Category $category
+     * Returns offline store URL by which it can be accessed
+     * @param Webinse_OfflineStores_Model_Offlinestore $offlineStore
      * @return string
      */
-    protected function _getDirectUrl(Mage_Catalog_Model_Category $category)
+    protected function _getDirectUrl(Webinse_OfflineStores_Model_Offlinestore $offlineStore)
     {
-        return $this->getUrlInstance()->getDirectUrl($category->getRequestPath());
+        return $this->getUrlInstance()->getDirectUrl($offlineStore->getRequestPath());
     }
-
-
 
     /**
      * Retrieve Url instance

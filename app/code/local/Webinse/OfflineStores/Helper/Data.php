@@ -51,21 +51,21 @@ class Webinse_OfflineStores_Helper_Data extends Mage_Core_Helper_Abstract
         return Mage::getStoreConfig('offlinestores/offlinestoresgroup/offlinestoresperpage');
     }
 
-    public function getImagePath($id = 0)
+    public function getImagePath($id = 0, $ext = 'jpg')
     {
         $path = Mage::getBaseDir('media') . '/offlinestore';
         if ($id) {
-            return "{$path}/{$id}.jpg";
+            return "{$path}/{$id}.{$ext}";
         } else {
             return $path;
         }
     }
 
-    public function getImageUrl($id = 0)
+    public function getImageUrl($id = 0, $ext = 'jpg')
     {
         $url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'offlinestore/';
         if ($id) {
-            return $url . $id . '.jpg';
+            return $url . $id . '.'.$ext;
         } else {
             return $url;
         }

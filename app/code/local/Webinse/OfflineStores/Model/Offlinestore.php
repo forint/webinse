@@ -36,6 +36,13 @@ class Webinse_OfflineStores_Model_Offlinestore extends Mage_Core_Model_Abstract
      */
     protected $_urlModel = null;
 
+    /**
+     * URL Model instance
+     *
+     * @var Mage_Core_Model_Url
+     */
+    protected static $_url;
+
     protected $_eventPrefix = 'webinse_offlinestores';
 
     /**
@@ -259,18 +266,26 @@ class Webinse_OfflineStores_Model_Offlinestore extends Mage_Core_Model_Abstract
      * Upload Offline Store Image File to Media
      *
      * @param $entityId
+     * @param $data Mage Re
      */
-    public function saveImage($entityId)
+    public function saveImage($entityId, $data)
     {
         if (isset($_FILES['image']['name']) && $_FILES['image']['name'] != '') {
+
             $uploader = new Varien_File_Uploader('image');
-            $uploader->setAllowedExtensions(array('jpg', 'jpeg'));
+            $uploader->setAllowedExtensions(array('jpg', 'jpeg', 'png'));
             $uploader->setAllowRenameFiles(false);
             $uploader->setFilesDispersion(false);
-            $uploader->save(Mage::helper('webinseofflinestores')->getImagePath(), $entityId . '.jpg');
+            $result = $uploader->save(Mage::helper('webinseofflinestores')->getImagePath(), $entityId . '.jpg');
+            if ($result){
+                return $result['file'];
+            }
+
         } else {
-            if (isset($data['image']['delete']) && $data['image']['delete'] == 1) {
-                @unlink(Mage::helper('webinseofflinestores')->getImagePath($entityId));
+            if (isset($data['offlinestore']['delete']) && $data['offlinestore']['delete'] == 1) {
+                $imageProperties = explode('.',$data['offlinestore']['value']);
+                $ext = end($imageProperties);
+                @unlink(Mage::helper('webinseofflinestores')->getImagePath($entityId, $ext));
             }
         }
     }
@@ -278,13 +293,13 @@ class Webinse_OfflineStores_Model_Offlinestore extends Mage_Core_Model_Abstract
     /**
      * Retrieve offline store URL
      *
-     * @param  bool $useSid
      * @return string
      */
-    public function getOfflineStoreUrl($useSid = null)
+    public function getOfflineStoreUrl()
     {
         return $this->getUrlModel()->getOfflineStoreUrl($this);
     }
+
     /**
      * Get offline store url model
      *
@@ -296,5 +311,67 @@ class Webinse_OfflineStores_Model_Offlinestore extends Mage_Core_Model_Abstract
             $this->_urlModel = Mage::getSingleton('webinseofflinestores/factory')->getOfflineStoreUrlInstance();
         }
         return $this->_urlModel;
+    }
+
+    /**
+     * Retrieve URL instance
+     *
+     * @return Mage_Core_Model_Url
+     */
+    public function getUrlInstance()
+    {
+        if (!self::$_url) {
+            self::$_url = Mage::getModel('core/url');
+        }
+        return self::$_url;
+    }
+
+    /**
+     * Retrieve offline store id URL
+     *
+     * @return string
+     */
+    public function getOfflineStoreIdUrl()
+    {
+        Varien_Profiler::start('REGULAR: '.__METHOD__);
+        $urlKey = $this->formatUrlKey($this->getName());
+
+        $url = $this->getUrlInstance()->getUrl('offlinestore/view', array(
+            's'=>$urlKey,
+            'id'=>$this->getId(),
+        ));
+
+        Varien_Profiler::stop('REGULAR: '.__METHOD__);
+        return $url;
+    }
+
+    /**
+     * Retrieve image URL
+     *
+     * @return string
+     */
+    public function getImageUrl()
+    {
+        $url = false;
+
+        if ($image = $this->getImage()) {
+            $url = Mage::getBaseUrl('media').'offlinestore/'.$image;
+        }
+        return $url;
+    }
+
+    /**
+     * Format URL key from name or defined key
+     *
+     * @param string $str
+     * @return string
+     */
+    public function formatUrlKey($str)
+    {
+        $str = Mage::helper('catalog/product_url')->format($str);
+        $urlKey = preg_replace('#[^0-9a-z]+#i', '-', $str);
+        $urlKey = strtolower($urlKey);
+        $urlKey = trim($urlKey, '-');
+        return $urlKey;
     }
 }

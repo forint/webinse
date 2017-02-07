@@ -1,6 +1,8 @@
 <?php
 class Webinse_OfflineStores_Block_Adminhtml_Form_Element_Image extends Varien_Data_Form_Element_Image
 {
+
+    public $_value = false;
     /**
      * Constructor
      *
@@ -8,13 +10,10 @@ class Webinse_OfflineStores_Block_Adminhtml_Form_Element_Image extends Varien_Da
      */
     public function __construct()
     {
-        $data = array(
-            'label' => 'Image',
-            'name'  => 'image'
-        );
-        parent::__construct($data);
         $this->setType('file');
-        $this->_initImageValues();
+        $this->setLabel('Image');
+        $this->setName('image');
+        // $this->_initImageValues();
     }
 
     /**
@@ -27,5 +26,16 @@ class Webinse_OfflineStores_Block_Adminhtml_Form_Element_Image extends Varien_Da
         $this->setValue($value);
 
     }
+
+    /**
+     * Retrieve offline store image url
+     * @return bool|string
+     */
+    protected function _getUrl()
+    {
+        $offlineStoreId = Mage::registry('offlinestore');
+        return Mage::helper('webinseofflinestores')->getImageUrl($offlineStoreId->getId());
+    }
+
 
 }

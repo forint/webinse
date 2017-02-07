@@ -112,11 +112,21 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
             }
 
             try {
+
+                if (isset($data['offlinestore']['delete']) && $data['offlinestore']['delete'] == 1) {
+                    $offlineStore->setData('image', '');
+                }
+
                 $offlineStore->save();
                 $offlineStore->getResource()->_saveOfflineStoreProducts($offlineStore);
 
+                /** @var Webinse_OfflineStores_Model_Offlinestore $offlineStoreId */
                 $offlineStoreId = $offlineStore->getId();
-                $offlineStore->saveImage($offlineStoreId);
+                $imageLabel = $offlineStore->saveImage($offlineStoreId, $data);
+                $offlineStore->setData('image', $imageLabel);
+                $offlineStore->save();
+
+
 
                 if (isset($data['copy_to_stores'])) {
                     $this->_copyAttributesBetweenStores($data['copy_to_stores'], $offlineStoreId);

@@ -54,41 +54,22 @@ class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tab_Attributes ex
                 $country->addClass('countries');
             }
 
+           /* foreach($fieldset->getElements() as $element){
+                print_r('<pre>');
+                print_r(get_class($element));
+                print_r('</pre>');
+                echo PHP_EOL;
+
+            }
+            die;*/
             // Add image renderer
             $image = $form->getElement('image');
             if ($image){
+                // $image->setIdFieldName('Image');
+                // var_dump(get_class_methods($form));die;
                 $form->setRenderer(Mage::getBlockSingleton('webinseofflinestores/adminhtml_form_element_image'));
             }
 
-
-            //$image->setRendere();
-            /*print_r('<pre>');
-            print_r(get_class_methods($image));
-            print_r('</pre>');
-            die;*/
-            /*$fieldset->addField('image', 'image', array(
-                'label' => Mage::helper('webinseofflinestores')->__('Image'),
-                'name'  => 'image'
-            ));*/
-
-
-
-            // Add new attribute button if it is not an image tab
-            if (!$form->getElement('media_gallery')
-                && Mage::getSingleton('admin/session')->isAllowed('catalog/attributes/attributes')
-            ) {
-                $headerBar = $this->getLayout()->createBlock('adminhtml/catalog_product_edit_tab_attributes_create');
-
-                $headerBar->getConfig()
-                    ->setTabId('group_' . $group->getId())
-                    ->setGroupId($group->getId())
-                    ->setStoreId($form->getDataObject()->getStoreId())
-                    ->setAttributeSetId($form->getDataObject()->getAttributeSetId())
-                    ->setTypeId($form->getDataObject()->getTypeId())
-                    ->setProductId($form->getDataObject()->getId());
-
-                $fieldset->setHeaderBar($headerBar->toHtml());
-            }
 
             $values = Mage::registry('offlinestore')->getData();
 

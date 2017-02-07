@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: forint
- * Date: 4/8/16
- * Time: 7:12 PM
- */
 class Webinse_OfflineStores_Controller_Router extends Mage_Core_Controller_Varien_Router_Abstract {
 
     public function initControllerRouters($observer)

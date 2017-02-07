@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <widgets>
-    <offlinestores type="webinseofflinestores/widget_catalog" translate="Offline Stores Catalog" module="webinseofflinestores">
+    <offlinestores type="webinseofflinestores/widget_offlinestore" translate="Offline Stores Catalog" module="webinseofflinestores">
         <name>Offline Stores Catalog</name>
         <description>Display Offline Stores considering Webinse Preferences</description>
     </offlinestores>
