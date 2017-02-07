@@ -14,6 +14,31 @@ class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tab_Attributes ex
         }
     }
 
+
+    /**
+     * Retrieve additional element types
+     *
+     * @return array
+     */
+    protected function _getAdditionalElementTypes()
+    {
+        $result = array(
+            'image'    => Mage::getConfig()->getBlockClassName('webinseofflinestores/adminhtml_form_element_image'),
+            'boolean'  => Mage::getConfig()->getBlockClassName('adminhtml/catalog_product_helper_form_boolean'),
+            'textarea' => Mage::getConfig()->getBlockClassName('adminhtml/catalog_helper_form_wysiwyg')
+        );
+
+        $response = new Varien_Object();
+        $response->setTypes(array());
+        Mage::dispatchEvent('adminhtml_catalog_product_edit_element_types', array('response' => $response));
+
+        foreach ($response->getTypes() as $typeName => $typeClass) {
+            $result[$typeName] = $typeClass;
+        }
+
+        return $result;
+    }
+
     /**
      * Prepare attributes form
      *
@@ -54,33 +79,16 @@ class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tab_Attributes ex
                 $country->addClass('countries');
             }
 
-           /* foreach($fieldset->getElements() as $element){
-                print_r('<pre>');
-                print_r(get_class($element));
-                print_r('</pre>');
-                echo PHP_EOL;
-
-            }
-            die;*/
             // Add image renderer
-            $image = $form->getElement('image');
+            /*$image = $form->getElement('image');
             if ($image){
-                // $image->setIdFieldName('Image');
+                $image->setValue('qwrqwr');
                 // var_dump(get_class_methods($form));die;
                 $form->setRenderer(Mage::getBlockSingleton('webinseofflinestores/adminhtml_form_element_image'));
-            }
+            }*/
 
 
             $values = Mage::registry('offlinestore')->getData();
-
-            // Set default attribute values for new product
-            if (!Mage::registry('offlinestore')->getId()) {
-                foreach ($attributes as $attribute) {
-                    if (!isset($values[$attribute->getAttributeCode()])) {
-                        $values[$attribute->getAttributeCode()] = $attribute->getDefaultValue();
-                    }
-                }
-            }
 
             if (Mage::registry('offlinestore')->hasLockedAttributes()) {
                 foreach (Mage::registry('offlinestore')->getLockedAttributes() as $attribute) {
@@ -97,31 +105,6 @@ class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tab_Attributes ex
 
             $this->setForm($form);
         }
-    }
-
-    /**
-     * Retrieve additional element types
-     *
-     * @return array
-     */
-    protected function _getAdditionalElementTypes()
-    {
-        $result = array(
-            //'image'    => Mage::getConfig()->getBlockClassName('adminhtml/catalog_product_helper_form_image'),
-            'image'    => Mage::getConfig()->getBlockClassName('webinseofflinestores/adminhtml_form_element_image'),
-            'boolean'  => Mage::getConfig()->getBlockClassName('adminhtml/catalog_product_helper_form_boolean'),
-            'textarea' => Mage::getConfig()->getBlockClassName('adminhtml/catalog_helper_form_wysiwyg')
-        );
-
-        $response = new Varien_Object();
-        $response->setTypes(array());
-        Mage::dispatchEvent('adminhtml_catalog_product_edit_element_types', array('response' => $response));
-
-        foreach ($response->getTypes() as $typeName => $typeClass) {
-            $result[$typeName] = $typeClass;
-        }
-
-        return $result;
     }
 
 }

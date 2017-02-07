@@ -47,7 +47,6 @@ class Webinse_OfflineStores_Model_Resource_Setup extends Mage_Eav_Model_Entity_S
                         'input' => 'image',
                         'class' => '',
                         'source' => '',
-                        'input_renderer' => 'catalog/category_attribute_backend_image',
                         'global' => 0,
                         'visible' => true,
                         'required' => false,

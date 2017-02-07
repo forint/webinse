@@ -22,6 +22,7 @@ class Webinse_Offlinestores_Block_Adminhtml_OfflineStores_Edit_Form extends Mage
             'enctype'=> 'multipart/form-data'
         ));
 
+        //var_dump(Mage::helper('webinseofflinestores')->getImageUrl($entityId));die;
         $formData = array('image' => Mage::helper('webinseofflinestores')->getImageUrl($entityId));
 
         $form->setValues($formData);

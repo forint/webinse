@@ -271,7 +271,6 @@ class Webinse_OfflineStores_Model_Offlinestore extends Mage_Core_Model_Abstract
     public function saveImage($entityId, $data)
     {
         if (isset($_FILES['image']['name']) && $_FILES['image']['name'] != '') {
-
             $uploader = new Varien_File_Uploader('image');
             $uploader->setAllowedExtensions(array('jpg', 'jpeg', 'png'));
             $uploader->setAllowRenameFiles(false);
@@ -280,7 +279,6 @@ class Webinse_OfflineStores_Model_Offlinestore extends Mage_Core_Model_Abstract
             if ($result){
                 return $result['file'];
             }
-
         } else {
             if (isset($data['offlinestore']['delete']) && $data['offlinestore']['delete'] == 1) {
                 $imageProperties = explode('.',$data['offlinestore']['value']);
