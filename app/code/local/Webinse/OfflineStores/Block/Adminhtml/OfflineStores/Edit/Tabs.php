@@ -33,11 +33,10 @@ class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tabs extends Mage
 
             // do not add groups without attributes
             foreach ($attributes as $key => $attribute) {
-                if( !$attribute->getIsVisible() ) {
+                if( !$attribute->getIsVisible() ) { //|| $attribute->getAttributeCode() == 'region_id'
                     unset($attributes[$key]);
                 }
             }
-
             if (count($attributes)==0) {
                 continue;
             }

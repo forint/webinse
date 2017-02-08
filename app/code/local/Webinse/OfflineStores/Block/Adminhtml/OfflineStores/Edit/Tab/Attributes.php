@@ -49,7 +49,7 @@ class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tab_Attributes ex
         $group = $this->getGroup();
         if ($group) {
             $form = new Varien_Data_Form();
-
+            $form->setHtmlIdPrefix('_template_');
             // Initialize product object as form property to use it during elements generation
             $form->setDataObject(Mage::registry('offlinestore'));
 
@@ -66,12 +66,15 @@ class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tab_Attributes ex
             if ($regionElement) {
                 $isRequired = Mage::helper('directory')->isRegionRequired(Mage::registry('offlinestore')->getCountryId());
                 $regionElement->setRequired($isRequired);
-                $regionElement->setRenderer(Mage::getModel('adminhtml/customer_renderer_region'));
+                $regionElement->setRenderer(Mage::getModel('webinseofflinestores/renderer_region'));
             }
 
-            $regionElement = $form->getElement('region_id');
-            if ($regionElement) {
-                $regionElement->setNoDisplay(true);
+            $regionElementId = $form->getElement('region_id');
+            if ($regionElementId) {
+                //var_dump(get_class($regionElementId));die;
+                $regionElementId->setNoDisplay(true);
+                $regionElementId->setRenderer(Mage::getBlockSingleton('webinseofflinestores/adminhtml_renderer_region'));
+
             }
 
             $country = $form->getElement('country_id');
@@ -98,4 +101,8 @@ class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tab_Attributes ex
         }
     }
 
+    protected function _afterToHtml($html)
+    {
+        return $html;
+    }
 }

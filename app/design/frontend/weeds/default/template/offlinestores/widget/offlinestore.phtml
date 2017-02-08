@@ -9,7 +9,6 @@
 $_helper    = $this->helper('webinseofflinestores/output');
 $_offlineStoreCollection  = $this->getLoadedOfflineStoreCollection();
 ?>
-
 <?php if(!$_offlineStoreCollection->count()): ?>
     <p class="note-msg"><?php echo $this->__('There are no offline stores matching the selection.') ?></p>
 <?php else: ?>
@@ -22,7 +21,6 @@ $_offlineStoreCollection  = $this->getLoadedOfflineStoreCollection();
                     <li class="item<?php if( ++$_iterator == sizeof($_offlineStoreCollection) ): ?> last<?php endif; ?>">
                         <?php // Product Image ?>
                         <a href="<?php echo $_offlineStore->getOfflineStoreUrl() ?>" title="<?php echo $this->stripTags($this->getName(), null, true) ?>" class="product-image">
-
                             <?php $_imgSize = 300; ?>
                             <?php // $this->helper('webinseofflinestores/image')->init($_offlineStore, 'small_image'); die('?'); ?>
                             <img id="product-collection-image-<?php echo $_offlineStore->getId(); ?>"

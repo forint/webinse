@@ -182,7 +182,6 @@ $numColumns = sizeof($this->getColumns());
 <script type="text/javascript">
 //<![CDATA[
     var offlineStoreProducts = $H(<?php echo $this->getProductsJson() ?>);
-console.log(offlineStoreProducts);
     $('in_offlinestore_products').value = offlineStoreProducts.toQueryString();
 
     var positionIndex = 1;
@@ -216,12 +215,6 @@ console.log(offlineStoreProducts);
             if(checkbox[0]){
                 var checked = isInput ? checkbox[0].checked : !checkbox[0].checked;
                 <?php echo $this->getJsObjectName() ?>.setCheckboxChecked(checkbox[0], checked);
-                /*if (!checkbox[1].value){
-                    checkbox[1].value = positionIndex;
-                    positionIndex++;
-                }else if(!checkbox[0].checked){
-                    checkbox[1].value = '';
-                }*/
             }
         }
     }

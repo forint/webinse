@@ -7,21 +7,19 @@
 <?php $_templatePrefix = $this->getTemplatePrefix(); ?>
 <script type="text/javascript">
     //<![CDATA[
+
     var addressesModel = Class.create();
     addressesModel.prototype = {
         initialize : function() {
 
+
             this.activeItem   = null;
-            this.itemTemplate = $('address_item_template');
-            this.formTemplate = $('address_form_template');
-            this.itemContainer= $('address_list');
-            this.formContainer= $('address_form_container');
+            this.itemList = $$('#address_list li');
             this.baseItemId   = 'new_item';
 
             this.defaultCountries = <?php echo $this->getDefaultCountriesJson(); ?>;
             this.itemContentTemplate = new Template('<?php echo $this->helper('customer/address')->getFormat('js_template')?>');
 
-            this.onNewAddressClick  = this.addNewAddress.bindAsEventListener(this);
             this.onItemMouseOver    = this.itemMouseOver.bindAsEventListener(this);
             this.onItemMouseOut     = this.itemMouseOut.bindAsEventListener(this);
             this.onItemMouseClick   = this.itemMouseClick.bindAsEventListener(this);
@@ -35,6 +33,7 @@
             this.bindCountryRegionRelation();
         },
         initItem : function(item){
+            return false;
             if(item && $('form_'+item.id)){
                 item.formBlock = $('form_'+item.id);
                 Element.hide($('form_'+item.id));
@@ -54,62 +53,6 @@
                 Event.observe(item, 'click', this.onItemMouseClick);
             }
         },
-
-        addNewAddress : function(event){
-            if(this.canCreateNewAddress){
-                this.itemCount++;
-                if($('no_address_message')){
-                    $('no_address_message').hide();
-                }
-                // preventing duplication of ids for fields and blocks
-                while ($$("div[id='form_address_item_" + this.itemCount + "']").length) {
-                    this.itemCount++;
-                }
-                // create new form elements
-                Element.insert(this.formContainer, {bottom:
-                '<div id="' + 'form_' + this.baseItemId + this.itemCount + '">'
-                + this.prepareTemplate(this.formTemplate.innerHTML)
-                + '</div>'
-                });
-
-                var newForm = $('form_' + this.baseItemId + this.itemCount);
-
-                $('_item'+this.itemCount+'firstname').value = $('_accountfirstname').value;
-                $('_item'+this.itemCount+'lastname').value = $('_accountlastname').value;
-
-                if ($('_accountwebsite_id').value !== '' && undefined !== this.defaultCountries[$('_accountwebsite_id').value]) {
-                    $('_item'+this.itemCount+'country_id').value = this.defaultCountries[$('_accountwebsite_id').value];
-                }
-
-                Element.hide(newForm);
-                var template = '<li id="' + this.baseItemId+this.itemCount + '">';
-                deleteButtonId ++;
-                template    += this.prepareTemplate(this.itemTemplate.innerHTML).replace('delete_button', 'delete_button'+ deleteButtonId);
-                template    += '</li>';
-                Element.insert(this.itemContainer, {bottom: template});
-                var newItem = $(this.baseItemId+this.itemCount);
-                newItem.isNewAddress = true;
-                newItem.formBlock = newForm;
-
-
-                newForm.statusBar = newItem;
-                newForm.addressItem = newItem;
-
-                // set Zip optional/required
-                var countryElement = $('_item' + newItem.id.replace(/address_item_/, '').replace(new RegExp(this.baseItemId), '') + 'country_id');
-                varienGlobalEvents.fireEvent("address_country_changed", countryElement);
-
-                this.addItemObservers(newItem);
-                this.setActiveItem(newItem);
-                this.bindCountryRegionRelation(newForm.id);
-
-                if( $('_item'+this.itemCount+'firstname').value ) this.syncFormData($('_item'+this.itemCount+'firstname'));
-                if( $('_item'+this.itemCount+'lastname').value ) this.syncFormData($('_item'+this.itemCount+'lastname'));
-            }
-            this.reloadItemList();
-            //Event.stop(event);
-        },
-
         prepareTemplate : function(template){
             return template
                 .replace(/<?php echo $_templatePrefix ?>/g, '_item'+this.itemCount)
@@ -339,6 +282,7 @@
 
             if(countryElement.id){
                 var regionElement  = $(countryElement.id.replace(/country_id/, 'region'));
+                console.log(regionElement);
                 if(regionElement){
                     this.regionElement = regionElement;
                     this.countryEl = countryElement;
@@ -350,7 +294,6 @@
                         this.refreshRegionField('[]');
                     }
                 }
-                return false;
                 // set Zip optional/required
                 varienGlobalEvents.fireEvent("address_country_changed", countryElement);
             }
@@ -358,7 +301,7 @@
 
         // serverResponse is either string with server response, or object to force some paricular data setting
         refreshRegionField : function(serverResponse){
-
+            console.log('refreshRegionField');
             if (!serverResponse)
                 return;
             var data = eval('(' + serverResponse + ')');
@@ -376,12 +319,15 @@
             var newInputId = null; // id of imput that was added to a page - filled below
 
             if (data.length) {
+                console.log('length');
                 // Create visible selectbox 'region_id' and hidden 'region'
                 var html = '<select name="' + regionIdHtmlName + '" id="' + regionIdHtmlId + '" class="required-entry select" title="' + this.regionElement.title + '">';
                 for (var i in data){
                     if(data[i].label) {
                         html+= '<option value="'+data[i].value+'"';
+                        console.log('before selected');
                         if(this.regionElement.value && (this.regionElement.value == data[i].value || this.regionElement.value == data[i].label)){
+                            console.log('selected');
                             html+= ' selected="selected"';
                         }
                         html+='>'+data[i].label+'</option>';

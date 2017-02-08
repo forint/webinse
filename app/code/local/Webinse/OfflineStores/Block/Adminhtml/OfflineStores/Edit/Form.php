@@ -58,14 +58,4 @@ class Webinse_Offlinestores_Block_Adminhtml_OfflineStores_Edit_Form extends Mage
         return '_template_';
     }
 
-    /**
-     * Retrieve predefined additional element types
-     *
-     * @return array
-     */
-    protected function _getAdditionalElementTypes()
-    {
-        return array();
-    }
-
 }
