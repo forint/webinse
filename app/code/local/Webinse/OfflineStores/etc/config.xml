@@ -56,6 +56,11 @@
             </offlinestores_write>
         </resources>
         <models>
+            <catalog>
+                <rewrite>
+                    <resource_product_collection>Webinse_OfflineStores_Model_Resource_Product_Collection</resource_product_collection>
+                </rewrite>
+            </catalog>
             <webinseofflinestores>
                 <class>Webinse_OfflineStores_Model</class>
                 <resourceModel>webinseofflinestores_resource</resourceModel>

@@ -4,9 +4,7 @@
         <reference name="content">
             <block type="webinseofflinestores/offlinestore_view" name="offlinestore_view" template="offlinestores/view.phtml">
                 <block type="webinseofflinestores/product_list" name="product_list" template="offlinestores/product/list.phtml">
-                    <block type="webinseofflinestores/product_list_toolbar" name="product_list_toolbar" template="offlinestores/product/list/toolbar.phtml">
-                        <block type="page/html_pager" name="product_list_toolbar_pager"/>
-                    </block>
+                    <block type="page/html_pager" name="offline_store_page"/>
                     <action method="addColumnCountLayoutDepend"><layout>empty</layout><count>6</count></action>
                     <action method="addColumnCountLayoutDepend"><layout>one_column</layout><count>5</count></action>
                     <action method="addColumnCountLayoutDepend"><layout>two_columns_left</layout><count>4</count></action>
@@ -17,4 +15,13 @@
             </block>
         </reference>
     </webinseofflinestores_view_index>
+
+    <catalog_product_view>
+        <reference name="product.info">
+            <block type="webinseofflinestores/relation_product_offlinestores" name="relation.product.offlinestores" before="-" template="offlinestores/relation/product/offlinestores.phtml">
+                <action method="addToParentGroup"><group>detailed_info</group></action>
+                <action method="setTitle" translate="value"><value>Offline Stores</value></action>
+            </block>
+        </reference>
+    </catalog_product_view>
 </layout>

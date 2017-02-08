@@ -143,4 +143,42 @@ class Webinse_OfflineStores_Model_Resource_Offlinestore_Collection extends Mage_
         }
     }
 
+    /**
+     * Specify product filter for offline stores collection
+     *
+     * @param Mage_Catalog_Model_Product $product
+     * @return Webinse_OfflineStores_Model_Resource_Product_Collection
+     */
+    public function addProductFilter(Mage_Catalog_Model_Product $product)
+    {
+
+        /** @var Relation Between Table $conditions */
+        $conditions = array(
+            'offlinestores_product.offlinestore_id=e.entity_id',
+            $this->getConnection()->quoteInto('offlinestores_product.product_id=?', $product->getId())
+        );
+
+        $joinCond = join(' AND ', $conditions);
+        $fromPart = $this->getSelect()->getPart(Zend_Db_Select::FROM);
+        if (isset($fromPart['offlinestores_product'])) {
+            $fromPart['offlinestores_product']['joinCondition'] = $joinCond;
+            $this->getSelect()->setPart(Zend_Db_Select::FROM, $fromPart);
+        }
+        else {
+            $this->getSelect()->join(
+                array('offlinestores_product' => $this->getTable('webinseofflinestores/offlinestores_product')),
+                $joinCond,
+                array('offlinestores_product_index_position' => 'position')
+            );
+        }
+
+        /** Join Additional Enitity Table for retrieve Entity Values */
+        /*$this->getSelect()->joinLeft(
+            array("offlinestores_values"=>'webinse_offlinestores_varchar'),
+            'e.entity_id = offlinestores_values.entity_id',
+            array('offlinestores_values' => "value")
+        );*/
+
+        return $this;
+    }
 }

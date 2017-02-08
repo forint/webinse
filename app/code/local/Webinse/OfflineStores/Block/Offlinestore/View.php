@@ -18,35 +18,29 @@ class Webinse_OfflineStores_Block_Offlinestore_View extends Mage_Core_Block_Temp
     {
         return $this->getChildHtml('product_list');
     }
-    /*protected function _prepareLayout()
+
+    /**
+     * Retrieve Offline Store Address Information
+     */
+    public function getAddressInformation($groupName)
     {
-        parent::_prepareLayout();
+        $attributes = false;
+        $_offlineStore = $this->getCurrentOfflineStore();
+        $setId = '14';
 
-        $this->getLayout()->createBlock('catalog/breadcrumbs');
+        $groupCollection = Mage::getResourceModel('eav/entity_attribute_group_collection')
+            ->setAttributeSetFilter($setId)
+            ->setSortOrder()
+            ->load();
 
-        if ($headBlock = $this->getLayout()->getBlock('head')) {
-            $category = $this->getCurrentCategory();
-            if ($title = $category->getMetaTitle()) {
-                $headBlock->setTitle($title);
-            }
-            if ($description = $category->getMetaDescription()) {
-                $headBlock->setDescription($description);
-            }
-            if ($keywords = $category->getMetaKeywords()) {
-                $headBlock->setKeywords($keywords);
-            }
-            if ($this->helper('catalog/category')->canUseCanonicalTag()) {
-                $headBlock->addLinkRel('canonical', $category->getUrl());
-            }
 
-            if ($this->IsRssCatalogEnable() && $this->IsTopCategory()) {
-                $title = $this->helper('rss')->__('%s RSS Feed',$this->getCurrentCategory()->getName());
-                $headBlock->addItem('rss', $this->getRssLink(), 'title="'.$title.'"');
+        foreach ($groupCollection as $group){
+            if ($group->getAttributeGroupName() == $groupName){
+                $attributes = $_offlineStore->getAttributes($group->getId(), true);
             }
         }
 
-        return $this;
-    }*/
-
+        return $attributes;
+    }
 
 }

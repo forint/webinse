@@ -65,16 +65,12 @@ class Webinse_OfflineStores_Model_Resource_Offlinestore extends Mage_Eav_Model_E
         if ($products === null) {
             return $this;
         }
-
         /**
-         * old category-product relationships
+         * old offlinestore-product relationships
          */
         $oldProducts = $offlinestore->getProductsPosition();
-        if (!$oldProducts){
-            $insert = array_diff_key($products, $oldProducts);
-        }else{
-            $insert = $products;
-        }
+
+        $insert = array_diff_key($products, $oldProducts);
         $delete = array_diff_key($oldProducts, $products);
 
         /**

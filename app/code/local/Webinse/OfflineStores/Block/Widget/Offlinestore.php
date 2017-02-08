@@ -1,12 +1,88 @@
 <?php
-class Webinse_OfflineStores_Block_Widget_Offlinestore extends Mage_Core_Block_Template implements Mage_Widget_Block_Interface
+class Webinse_OfflineStores_Block_Widget_Offlinestore
+    extends Mage_Core_Block_Template
+    implements Mage_Widget_Block_Interface
 {
+
+    /**
+     * Default value for products count that will be shown
+     */
+    const DEFAULT_PRODUCTS_COUNT = 10;
+
+    /**
+     * Name of request parameter for page number value
+     */
+    const PAGE_VAR_NAME                     = 'np';
+
     /**
      * Offline Store Collection
      *
      * @var Mage_Eav_Model_Entity_Collection_Abstract
      */
     protected $_offlineStoreCollection;
+
+    /**
+     * Instance of pager block
+     *
+     * @var Mage_Catalog_Block_Product_Widget_Html_Pager
+     */
+    protected $_pager;
+
+    protected $_pageSize;
+
+    protected $_offlineStoresCount;
+
+    protected function _construct()
+    {
+        $this->setPageSize();
+        $count = Mage::getResourceModel('webinseofflinestores/offlinestore_collection')->getSize();
+        $this->setOfflineStoresCount($count);
+        parent::_construct();
+
+        /*
+         * In case template was passed through constructor
+         * we assign it to block's property _template
+         * Mainly for those cases when block created
+         * not via Mage_Core_Model_Layout::addBlock()
+         */
+        if ($this->hasData('template')) {
+            $this->setTemplate($this->getData('template'));
+        }
+
+    }
+
+
+    public function setPageSize()
+    {
+        $this->_pageSize = Mage::helper('webinseofflinestores')->getOfflineStoresPerPage();
+    }
+    public function getPageSize()
+    {
+        return $this->_pageSize;
+    }
+    /**
+     * Set how much product should be displayed at once.
+     *
+     * @param $count
+     * @return Mage_Catalog_Block_Product_New
+     */
+     public function setOfflineStoresCount($count)
+     {
+         $this->_offlineStoresCount = $count;
+     }
+
+    /**
+     * Get how much products should be displayed at once.
+     *
+     * @return int
+     */
+     public function getOfflineStoresCount()
+     {
+        if (null === $this->_offlineStoresCount) {
+            $this->_offlineStoresCount = self::DEFAULT_PRODUCTS_COUNT;
+        }
+        return $this->_offlineStoresCount;
+     }
 
     /**
      * Retrieve loaded offline store collection
@@ -26,10 +102,16 @@ class Webinse_OfflineStores_Block_Widget_Offlinestore extends Mage_Core_Block_Te
     protected function _getOfflineStoreCollection()
     {
         if (is_null($this->_offlineStoreCollection)) {
+            $this->_offlineStoreCollection= Mage::getResourceModel('webinseofflinestores/offlinestore_collection')
+                ->addAttributeToSelect('name')
+                ->addAttributeToSelect('image')
+                ->addAttributeToSelect('short_description')
+                ->addAttributeToSelect('description')
+                ->addAttributeToSelect('disposition')
+                ->setPageSize($this->getPageSize()) //$this->getProductsCount()
+                ->setCurPage($this->getRequest()->getParam(self::PAGE_VAR_NAME))
+                ->load();
 
-            /* @var $layer Webinse_OfflineStores_Model_Layer */
-            $layer = $this->getLayer();
-            $this->_offlineStoreCollection = $layer->getOfflineStoreCollection();
         }
 
         return $this->_offlineStoreCollection;
@@ -74,4 +156,31 @@ class Webinse_OfflineStores_Block_Widget_Offlinestore extends Mage_Core_Block_Te
     public function getColumnCount(){
         return Mage::getStoreConfig('offlinestores/offlinestoresgroup/offlinestorecolumncount');
     }
+
+    /**
+     * Render pagination HTML
+     *
+     * @return string
+     */
+    public function getPagerHtml()
+    {
+        if (!$this->_pager) {
+            $this->_pager = $this->getLayout()
+                ->createBlock('webinseofflinestores/widget_html_pager', 'offline.store.widget.pager');
+
+            $this->_pager->setUseContainer(true)
+                ->setShowAmounts(true)
+                ->setShowPerPage(false)
+                ->setPageVarName(self::PAGE_VAR_NAME)
+                ->setLimit($this->getPageSize()) // $this->getProductsPerPage()
+                ->setTotalLimit($this->getOfflineStoresCount()) // $this->getProductsCount()
+                ->setCollection($this->_getOfflineStoreCollection());
+        }
+        if ($this->_pager instanceof Mage_Core_Block_Abstract) {
+            return $this->_pager->toHtml();
+        }
+        return '';
+    }
+
+
 }

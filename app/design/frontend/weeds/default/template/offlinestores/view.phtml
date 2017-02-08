@@ -23,4 +23,20 @@ if ($_imgUrl = $_offlineStore->getImageUrl()) {
     </div>
 <?php endif; ?>
 
+<?php $_sectionLabel = 'Address Information'; ?>
+<div class="offlinestore-address-information">
+    <h3><?php echo $_helper->__($_sectionLabel) ?></h3>
+    <?php $_addressInformation = $this->getAddressInformation($_sectionLabel); ?>
+    <?php if ($_addressInformation): ?>
+
+            <?php foreach ($_addressInformation as $attribute): ?>
+            <dl>
+                <dt><?php echo $attribute->getFrontendLabel() ?></dt>
+                <dd><?php echo $attribute->getFrontend()->getValue($_offlineStore) ?></dd>
+            </dl>
+            <?php endforeach; ?>
+
+    <?php endif; ?>
+</div>
+
 <?php echo $this->getProductListHtml() ?>

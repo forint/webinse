@@ -182,6 +182,7 @@ $numColumns = sizeof($this->getColumns());
 <script type="text/javascript">
 //<![CDATA[
     var offlineStoreProducts = $H(<?php echo $this->getProductsJson() ?>);
+console.log(offlineStoreProducts);
     $('in_offlinestore_products').value = offlineStoreProducts.toQueryString();
 
     var positionIndex = 1;

@@ -41,8 +41,7 @@ class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tabs extends Mage
             if (count($attributes)==0) {
                 continue;
             }
-            /*var_dump(get_class($this->_translateHtml($this->getLayout()->createBlock($this->getAttributeTabBlock(),
-                'adminhtml.offlinestores.edit.tab.attributes')->setGroup($group)))->setGroupAttributes($attributes));die;*/
+
             $this->addTab('group_'.$group->getId(), array(
                 'label'     => Mage::helper('webinseofflinestores')->__($group->getAttributeGroupName()),
                 'content'   => $this->_translateHtml($this->getLayout()->createBlock($this->getAttributeTabBlock(),

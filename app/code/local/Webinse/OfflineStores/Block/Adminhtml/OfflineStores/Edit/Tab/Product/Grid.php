@@ -328,10 +328,20 @@ class Webinse_OfflineStores_Block_Adminhtml_OfflineStores_Edit_Tab_Product_Grid 
 
     public function getProductsJson()
     {
-        Mage::Log(get_class($this->getOfflineStore()),null,'products.log');
+        $products = $this->getOfflineStore()->getProductsPosition();
         if (!empty($products)) {
             return Mage::helper('core')->jsonEncode($products);
         }
         return '{}';
+    }
+
+    /**
+     * Retrieve current category instance
+     *
+     * @return Mage_Catalog_Model_Category
+     */
+    public function getCategory()
+    {
+        return Mage::registry('offlinestore');
     }
 }

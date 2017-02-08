@@ -123,10 +123,11 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
                 /** @var Webinse_OfflineStores_Model_Offlinestore $offlineStoreId */
                 $offlineStoreId = $offlineStore->getId();
                 $imageLabel = $offlineStore->saveImage($offlineStoreId, $data);
-                $offlineStore->setData('image', $imageLabel);
-                $offlineStore->save();
 
-
+                if ($imageLabel){
+                    $offlineStore->setData('image', $imageLabel);
+                    $offlineStore->save();
+                }
 
                 if (isset($data['copy_to_stores'])) {
                     $this->_copyAttributesBetweenStores($data['copy_to_stores'], $offlineStoreId);

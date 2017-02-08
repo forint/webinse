@@ -1,0 +1,13 @@
+<?php
+/**
+ * Display Offline Stores witch related with current product
+ */
+$_offlineStores = $this->getOfflineStores();
+?>
+<?php if ($_offlineStores):?>
+    <ul class="product-info-offlinestore-list">
+    <?php foreach ($_offlineStores as $offlineStore): ?>
+        <li><a href="<?php echo $offlineStore->getOfflineStoreUrl() ?>" title="<?php echo $offlineStore->getName() ?>"><?php echo $offlineStore->getName() ?></a></li>
+    <?php endforeach; ?>
+    </ul>
+<?php endif; ?>

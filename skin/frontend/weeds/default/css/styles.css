@@ -10669,3 +10669,16 @@ div.left-nav-menu .navbar-collapse{
 div.clear {
     clear:both;
 }
+/* Address Information */
+div.offlinestore-address-information{
+    width:50%;
+}
+div.offlinestore-address-information dl{
+    display:block;
+}
+div.offlinestore-address-information dl dt{
+    min-width: 200px;
+}
+div.offlinestore-address-information dl dd{
+
+}

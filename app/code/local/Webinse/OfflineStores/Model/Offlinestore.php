@@ -374,4 +374,40 @@ class Webinse_OfflineStores_Model_Offlinestore extends Mage_Core_Model_Abstract
         $urlKey = trim($urlKey, '-');
         return $urlKey;
     }
+
+    /**
+     * Get offline store products collection
+     *
+     * @return Varien_Data_Collection_Db
+     */
+    public function getProductCollection()
+    {
+        /** Webinse_OfflineStores_Model_Resource_Product_Collection */
+        $collection = Mage::getResourceModel('webinseofflinestores/product_collection')
+            ->setStoreId($this->getStoreId())
+            ->addOfflineStoreFilter($this);
+        return $collection;
+    }
+
+    /**
+     * Get offline store products collection
+     *
+     * @return Varien_Data_Collection_Db
+     */
+    public function getOfflineStoresCollection(Mage_Catalog_Model_Product $product)
+    {
+        /** Webinse_OfflineStores_Model_Resource_Offlinestore_Collection */
+        $_collection = Mage::getResourceModel('webinseofflinestores/offlinestore_collection')
+            // ->setStoreId($this->getStoreId())
+            ->addAttributeToSelect('name')
+            ->addAttributeToSelect('image')
+            ->addAttributeToSelect('short_description')
+            ->addAttributeToSelect('description')
+            ->addAttributeToSelect('disposition')
+            ->addProductFilter($product);
+
+        return $_collection;
+    }
+
+
 }

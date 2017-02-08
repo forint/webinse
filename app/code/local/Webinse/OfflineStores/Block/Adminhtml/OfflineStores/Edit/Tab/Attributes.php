@@ -79,15 +79,6 @@ class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tab_Attributes ex
                 $country->addClass('countries');
             }
 
-            // Add image renderer
-            /*$image = $form->getElement('image');
-            if ($image){
-                $image->setValue('qwrqwr');
-                // var_dump(get_class_methods($form));die;
-                $form->setRenderer(Mage::getBlockSingleton('webinseofflinestores/adminhtml_form_element_image'));
-            }*/
-
-
             $values = Mage::registry('offlinestore')->getData();
 
             if (Mage::registry('offlinestore')->hasLockedAttributes()) {
