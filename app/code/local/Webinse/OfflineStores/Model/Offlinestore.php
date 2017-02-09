@@ -2,6 +2,11 @@
 class Webinse_OfflineStores_Model_Offlinestore extends Mage_Core_Model_Abstract
 {
     const DM_PRODUCT            = 'PRODUCTS';
+    /**
+     * Entity code.
+     * Can be used as part of method name for entity processing
+     */
+    const ENTITY                = 'offlinestore';
 
     /**
      * Offline store model instance

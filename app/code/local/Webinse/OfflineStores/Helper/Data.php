@@ -18,7 +18,6 @@ class Webinse_OfflineStores_Helper_Data extends Mage_Core_Helper_Abstract
      */
     protected $_attributeTabBlock = null;
 
-
     /**
      * Retrieve Attribute Tab Block Name for Offlinestore Edit
      *
@@ -41,16 +40,43 @@ class Webinse_OfflineStores_Helper_Data extends Mage_Core_Helper_Abstract
         return $this;
     }
 
+    /**
+     * Retrive count offlinestores entities display mode from system preferences
+     * If system value not set, get default value
+     *
+     * @return mixed|string
+     */
     public function getMode()
     {
-        return Mage::getStoreConfig('offlinestores/offlinestoresgroup/offlinestoreappearance');
+        $mode = Mage::getStoreConfig('offlinestores/offlinestoresgroup/offlinestoreappearance');
+        if (isset($mode) && !empty($mode))
+            return $mode;
+
+        return $this->_appearance;
     }
 
+    /**
+     * Retrive count offlinestores entities per page from system preferences
+     * If system value not set, get default value
+     *
+     * @return mixed|string
+     */
     public function getOfflineStoresPerPage()
     {
-        return Mage::getStoreConfig('offlinestores/offlinestoresgroup/offlinestoresperpage');
+        $perpage = Mage::getStoreConfig('offlinestores/offlinestoresgroup/offlinestoresperpage');
+        if (isset($perpage) && is_numeric($perpage))
+            return $perpage;
+
+        return $this->_perpage;
     }
 
+    /**
+     * Offline store image path
+     *
+     * @param int $id
+     * @param string $ext
+     * @return string
+     */
     public function getImagePath($id = 0, $ext = 'jpg')
     {
         $path = Mage::getBaseDir('media') . '/offlinestore';
@@ -61,6 +87,13 @@ class Webinse_OfflineStores_Helper_Data extends Mage_Core_Helper_Abstract
         }
     }
 
+    /**
+     * Offline store image url
+     *
+     * @param int $id
+     * @param string $ext
+     * @return string
+     */
     public function getImageUrl($id = 0, $ext = 'jpg')
     {
         $url = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'offlinestore/';

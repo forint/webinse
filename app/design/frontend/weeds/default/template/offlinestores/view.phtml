@@ -3,12 +3,12 @@ $_helper    = $this->helper('webinseofflinestores/output');
 $_offlineStore  = $this->getCurrentOfflineStore();
 $_imgHtml   = '';
 if ($_imgUrl = $_offlineStore->getImageUrl()) {
-    $_imgHtml = '<p class="category-image"><img src="'.$_imgUrl.'" alt="'.$this->escapeHtml($_offlineStore->getName()).'" title="'.$this->escapeHtml($_offlineStore->getName()).'" /></p>';
-    $_imgHtml = $_helper->categoryAttribute($_offlineStore, $_imgHtml, 'image');
+    $_imgHtml = '<p class="offline-store-image"><img src="'.$_imgUrl.'" alt="'.$this->escapeHtml($_offlineStore->getName()).'" title="'.$this->escapeHtml($_offlineStore->getName()).'" /></p>';
+    $_imgHtml = $_helper->getOfflineStoreAttribute($_offlineStore, $_imgHtml, 'image');
 }
 ?>
 <div class="page-title category-title">
-    <h1><?php echo $_helper->categoryAttribute($_offlineStore, $_offlineStore->getName(), 'name') ?></h1>
+    <h1><?php echo $_helper->getOfflineStoreAttribute($_offlineStore, $_offlineStore->getName(), 'name') ?></h1>
 </div>
 
 <?php echo $this->getMessagesBlock()->toHtml() ?>
@@ -18,8 +18,8 @@ if ($_imgUrl = $_offlineStore->getImageUrl()) {
 <?php endif; ?>
 
 <?php if($_description=$this->getCurrentOfflineStore()->getDescription()): ?>
-    <div class="category-description std">
-        <?php echo $_helper->categoryAttribute($_offlineStore, $_description, 'description') ?>
+    <div class="offline-description std">
+        <?php echo $_helper->getOfflineStoreAttribute($_offlineStore, $_description, 'description') ?>
     </div>
 <?php endif; ?>
 

@@ -20,7 +20,7 @@ class Webinse_OfflineStores_Helper_Output extends Mage_Core_Helper_Abstract
      */
     public function __construct()
     {
-        Mage::dispatchEvent('catalog_helper_output_construct', array('helper'=>$this));
+        Mage::dispatchEvent('offline_store_helper_output_construct', array('helper'=>$this));
     }
 
     protected function _getTemplateProcessor()
@@ -37,7 +37,7 @@ class Webinse_OfflineStores_Helper_Output extends Mage_Core_Helper_Abstract
      *
      * @param   string $method
      * @param   object $handler
-     * @return  Mage_Catalog_Helper_Output
+     * @return  Webinse_OfflineStores_Helper_Output
      */
     public function addHandler($method, $handler)
     {
@@ -72,21 +72,21 @@ class Webinse_OfflineStores_Helper_Output extends Mage_Core_Helper_Abstract
      * @param   string $method
      * @param   mixed $result
      * @param   array $params
-     * @return unknown
+     * @return  object
      */
     public function process($method, $result, $params)
     {
-
         foreach ($this->getHandlers($method) as $handler) {
             if (method_exists($handler, $method)) {
                 $result = $handler->$method($this, $result, $params);
             }
         }
+
         return $result;
     }
 
     /**
-     * Prepare product attribute html output
+     * Prepare offline store attribute html output
      *
      * @param   Mage_Catalog_Model_Product $product
      * @param   string $attributeHtml
@@ -121,16 +121,16 @@ class Webinse_OfflineStores_Helper_Output extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Prepare category attribute html output
+     * Prepare offline store attribute html output
      *
-     * @param   Mage_Catalog_Model_Category $category
+     * @param   Webinse_OfflineStores_Model_Offlinestore $offlineStore
      * @param   string $attributeHtml
      * @param   string $attributeName
      * @return  string
      */
-    public function categoryAttribute($category, $attributeHtml, $attributeName)
+    public function getOfflineStoreAttribute($offlineStore, $attributeHtml, $attributeName)
     {
-        $attribute = Mage::getSingleton('eav/config')->getAttribute(Mage_Catalog_Model_Category::ENTITY, $attributeName);
+        $attribute = Mage::getSingleton('eav/config')->getAttribute(Webinse_OfflineStores_Model_Offlinestore::ENTITY, $attributeName);
 
         if ($attribute && ($attribute->getFrontendInput() != 'image')
             && (!$attribute->getIsHtmlAllowedOnFront() && !$attribute->getIsWysiwygEnabled())) {
@@ -141,8 +141,8 @@ class Webinse_OfflineStores_Helper_Output extends Mage_Core_Helper_Abstract
                 $attributeHtml = $this->_getTemplateProcessor()->filter($attributeHtml);
             }
         }
-        $attributeHtml = $this->process('categoryAttribute', $attributeHtml, array(
-            'category'  => $category,
+        $attributeHtml = $this->process('offlineStoreAttribute', $attributeHtml, array(
+            'offlinestore'  => $offlineStore,
             'attribute' => $attributeName
         ));
         return $attributeHtml;
