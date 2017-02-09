@@ -31,8 +31,8 @@ if ($_imgUrl = $_offlineStore->getImageUrl()) {
 
             <?php foreach ($_addressInformation as $attribute): ?>
             <dl>
-                <dt><?php echo $attribute->getFrontendLabel() ?></dt>
-                <dd><?php echo $attribute->getFrontend()->getValue($_offlineStore) ?></dd>
+                <dt><?php echo $attribute['label'] ?></dt>
+                <dd><?php echo $attribute['value']; ?></dd>
             </dl>
             <?php endforeach; ?>
 

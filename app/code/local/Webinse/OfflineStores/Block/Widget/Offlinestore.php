@@ -39,12 +39,6 @@ class Webinse_OfflineStores_Block_Widget_Offlinestore
         $this->setOfflineStoresCount($count);
         parent::_construct();
 
-        /*
-         * In case template was passed through constructor
-         * we assign it to block's property _template
-         * Mainly for those cases when block created
-         * not via Mage_Core_Model_Layout::addBlock()
-         */
         if ($this->hasData('template')) {
             $this->setTemplate($this->getData('template'));
         }
@@ -108,7 +102,8 @@ class Webinse_OfflineStores_Block_Widget_Offlinestore
                 ->addAttributeToSelect('short_description')
                 ->addAttributeToSelect('description')
                 ->addAttributeToSelect('disposition')
-                ->setPageSize($this->getPageSize()) //$this->getProductsCount()
+                ->setOrder('disposition', 'ASC')
+                ->setPageSize($this->getPageSize())
                 ->setCurPage($this->getRequest()->getParam(self::PAGE_VAR_NAME))
                 ->load();
 
@@ -172,8 +167,8 @@ class Webinse_OfflineStores_Block_Widget_Offlinestore
                 ->setShowAmounts(true)
                 ->setShowPerPage(false)
                 ->setPageVarName(self::PAGE_VAR_NAME)
-                ->setLimit($this->getPageSize()) // $this->getProductsPerPage()
-                ->setTotalLimit($this->getOfflineStoresCount()) // $this->getProductsCount()
+                ->setLimit($this->getPageSize())
+                ->setTotalLimit($this->getOfflineStoresCount())
                 ->setCollection($this->_getOfflineStoreCollection());
         }
         if ($this->_pager instanceof Mage_Core_Block_Abstract) {

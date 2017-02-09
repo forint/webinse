@@ -72,7 +72,6 @@ class Webinse_OfflineStores_Model_Resource_Offlinestore_Collection extends Mage_
      */
     public function addUrlRewrite($offlineStoreId = '')
     {
-        die('addUrlRewrite');
         $this->_addUrlRewrite = true;
         if (Mage::getStoreConfig(Mage_Catalog_Helper_Product::XML_PATH_PRODUCT_URL_USE_CATEGORY, $this->getStoreId())) {
             $this->_urlRewriteOfflineStore = $offlineStoreId;
@@ -171,13 +170,6 @@ class Webinse_OfflineStores_Model_Resource_Offlinestore_Collection extends Mage_
                 array('offlinestores_product_index_position' => 'position')
             );
         }
-
-        /** Join Additional Enitity Table for retrieve Entity Values */
-        /*$this->getSelect()->joinLeft(
-            array("offlinestores_values"=>'webinse_offlinestores_varchar'),
-            'e.entity_id = offlinestores_values.entity_id',
-            array('offlinestores_values' => "value")
-        );*/
 
         return $this;
     }

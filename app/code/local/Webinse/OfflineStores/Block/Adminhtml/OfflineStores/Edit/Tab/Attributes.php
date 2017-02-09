@@ -71,7 +71,6 @@ class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tab_Attributes ex
 
             $regionElementId = $form->getElement('region_id');
             if ($regionElementId) {
-                //var_dump(get_class($regionElementId));die;
                 $regionElementId->setNoDisplay(true);
                 $regionElementId->setRenderer(Mage::getBlockSingleton('webinseofflinestores/adminhtml_renderer_region'));
 
