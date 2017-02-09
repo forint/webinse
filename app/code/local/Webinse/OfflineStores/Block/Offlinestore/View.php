@@ -26,7 +26,7 @@ class Webinse_OfflineStores_Block_Offlinestore_View extends Mage_Core_Block_Temp
     {
         $attributes = array();
         $_offlineStore = $this->getCurrentOfflineStore();
-        $setId = '14';
+        $setId = Mage::getModel('webinseofflinestores/offlinestore')->getAttributeSetId();
 
         $groupCollection = Mage::getResourceModel('eav/entity_attribute_group_collection')
             ->setAttributeSetFilter($setId)

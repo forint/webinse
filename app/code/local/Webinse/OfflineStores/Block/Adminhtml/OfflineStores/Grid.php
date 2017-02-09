@@ -5,7 +5,6 @@ class Webinse_OfflineStores_Block_Adminhtml_OfflineStores_Grid extends Mage_Admi
     {
         parent::__construct();
         $this->setId('offlineStores');
-        // $this->setDefaultSort('id_pfay_films');
         $this->setDefaultDir('DESC');
         $this->setSaveParametersInSession(true);
     }

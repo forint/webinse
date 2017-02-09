@@ -1,11 +1,4 @@
 <?php
-/**
- * Admin product edit tabs
- *
- * @category   Webinse
- * @package    Webinse_OfflineStores
- * @author     Webinse Core Team
- */
 class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tabs extends Mage_Adminhtml_Block_Widget_Tabs
 {
     protected $_attributeTabBlock = 'webinseofflinestores/adminhtml_offlinestores_edit_tab_attributes';
@@ -21,7 +14,7 @@ class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tabs extends Mage
     protected function _beforeToHtml()
     {
         $offlineStore = $this->getOfflineStore();
-        $setId = '14';
+        $setId = Mage::getModel('webinseofflinestores/offlinestore')->getAttributeSetId();
 
         $groupCollection = Mage::getResourceModel('eav/entity_attribute_group_collection')
             ->setAttributeSetFilter($setId)
@@ -33,7 +26,7 @@ class Webinse_OfflineStores_Block_Adminhtml_Offlinestores_Edit_Tabs extends Mage
 
             // do not add groups without attributes
             foreach ($attributes as $key => $attribute) {
-                if( !$attribute->getIsVisible() ) { //|| $attribute->getAttributeCode() == 'region_id'
+                if( !$attribute->getIsVisible() ) {
                     unset($attributes[$key]);
                 }
             }

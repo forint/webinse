@@ -173,9 +173,26 @@ class Webinse_OfflineStores_Model_Offlinestore extends Mage_Core_Model_Abstract
             ->getSortedAttributes($this->getOfflineStore($product)->getAttributeSetId());
     }
 
+    /**
+     * Retrive attribute set id witch offlinestore entity related
+     *
+     * @return mixed
+     */
     public function getAttributeSetId()
     {
-        return '14';
+        $entityTypeId = Mage::getModel('eav/entity')
+            ->setType('offlinestore')
+            ->getTypeId();
+
+        $attributeSet = Mage::getModel('eav/entity_attribute_set')
+            ->getCollection()
+            ->setEntityTypeFilter($entityTypeId)
+            ->getFirstItem();
+
+        if ($attributeSet)
+            return $attributeSet->getAttributeSetId();
+
+        return false;
     }
 
     /**
