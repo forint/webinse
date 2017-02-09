@@ -36,68 +36,19 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
      * Create new offline store entity
      */
     public function newAction(){
-
-        $offlineStore = $this->_initOfflinestore();
-        /*
-
-        $this->_title($this->__('New Product'));
-
-        Mage::dispatchEvent('catalog_product_new_action', array('product' => $product));
-
-        if ($this->getRequest()->getParam('popup')) {
-            $this->loadLayout('popup');
-        } else {
-            $_additionalLayoutPart = '';
-            if ($product->getTypeId() == Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE
-                && !($product->getTypeInstance()->getUsedProductAttributeIds()))
-            {
-                $_additionalLayoutPart = '_new';
-            }
-            $this->loadLayout(array(
-                'default',
-                strtolower($this->getFullActionName()),
-                'adminhtml_catalog_product_'.$product->getTypeId() . $_additionalLayoutPart
-            ));
-            $this->_setActiveMenu('catalog/products');
-        }
-
-        $this->getLayout()->getBlock('head')->setCanLoadExtJs(true);
-
-        $block = $this->getLayout()->getBlock('catalog.wysiwyg.js');
-        if ($block) {
-            $block->setStoreId($product->getStoreId());
-        }*/
-        $this->loadLayout();
-        $this->renderLayout();
-    }
-
-    /**
-     * Display available products
-     * With opportunity bind them to offline store entity
-     */
-    public function availableAction()
-    {
         $this->_initOfflinestore();
+        $this->_title($this->__('New Offline Store'));
         $this->loadLayout();
-        $blocks = $this->getLayout()->getAllBlocks();
-        foreach($blocks as $block){
-            echo $block->getNameInLayout();
-            echo PHP_EOL;
-        }
-        var_dump($this->getLayout()->getBlock('offlinestores.product.edit.tab.available'));die;
-        $this->getLayout()->getBlock('catalog.product.edit.tab.available')
-            ->setProductsRelated($this->getRequest()->getPost('products_related', null));
         $this->renderLayout();
     }
 
     /**
-     * Save method
+     * Save offlie store
      */
     public function saveAction(){
 
         $storeId        = $this->getRequest()->getParam('store');
         $redirectBack   = $this->getRequest()->getParam('back', false);
-        $productId      = $this->getRequest()->getParam('id');
         $isEdit         = (int)($this->getRequest()->getParam('id') != null);
 
         $data = $this->getRequest()->getPost();
@@ -173,7 +124,7 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
             try {
                 $offlineStore->load($offlineStore->getId());
                 $offlineStore->delete();
-                Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->__('The customer has been deleted.'));
+                Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper('adminhtml')->__('The offline store has been deleted.'));
             }
             catch (Exception $e){
                 Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
@@ -193,7 +144,7 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
         try {
             $offlineStoreData = $this->getRequest()->getPost('offlinestore');
 
-            /* @var $offlineStore Mage_Catalog_Model_Product */
+            /* @var $offlineStore Webinse_OfflineStores_Model_Offlinestore */
             $offlineStore = Mage::getModel('webinseofflinestores/offlinestore');
             $offlineStore->setData('_edit_mode', true);
             if ($storeId = $this->getRequest()->getParam('store')) {
@@ -279,7 +230,6 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
          * Create Permanent Redirect for old URL key
          */
         if ($offlinestore->getId() && isset($offlinestoreData['url_key_create_redirect']))
-            // && $product->getOrigData('url_key') != $product->getData('url_key')
         {
             $offlinestore->setData('save_rewrites_history', (bool)$productData['url_key_create_redirect']);
         }
@@ -302,7 +252,7 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
         }
 
         /**
-         * Initialize product categories
+         * Initialize offline store categories
          */
         $productIds = $this->getRequest()->getPost('product_ids');
         if (null !== $productIds) {
@@ -352,7 +302,7 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
         $offlineStore = $this->_initOfflinestore();
 
         if ($offlineStoreId && !$offlineStore->getId()) {
-            $this->_getSession()->addError(Mage::helper('catalog')->__('This product no longer exists.'));
+            $this->_getSession()->addError(Mage::helper('webinseofflinestores')->__('This offline store no longer exists.'));
             $this->_redirect('*/*/');
             return;
         }
@@ -370,10 +320,9 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
 
         $this->loadLayout(array(
             'default',
-            strtolower($this->getFullActionName()),
-            'adminhtml_catalog_product_'.$offlineStore->getTypeId() . $_additionalLayoutPart
+            strtolower($this->getFullActionName())
         ));
-        Mage::Log('crazy',null,'crazy.log');
+
         if (!Mage::app()->isSingleStoreMode() && ($switchBlock = $this->getLayout()->getBlock('store_switcher'))) {
             $switchBlock->setDefaultStoreName($this->__('Default Values'))
                 ->setWebsiteIds($offlineStore->getWebsiteIds())
