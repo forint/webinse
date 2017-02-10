@@ -39,6 +39,7 @@ class Webinse_OfflineStores_Block_Adminhtml_OfflineStores_Grid extends Mage_Admi
                 'align' =>'right',
                 'width' => '200px',
                 'index' => 'country_id',
+                'renderer'  => 'adminhtml/widget_grid_column_renderer_country'
             ));
         $this->addColumn('city',
             array(
