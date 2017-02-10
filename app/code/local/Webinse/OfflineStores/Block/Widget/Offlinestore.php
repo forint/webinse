@@ -97,6 +97,7 @@ class Webinse_OfflineStores_Block_Widget_Offlinestore
     {
         if (is_null($this->_offlineStoreCollection)) {
             $this->_offlineStoreCollection= Mage::getResourceModel('webinseofflinestores/offlinestore_collection')
+                ->addFieldToFilter('status','1')
                 ->addAttributeToSelect('name')
                 ->addAttributeToSelect('image')
                 ->addAttributeToSelect('short_description')

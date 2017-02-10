@@ -11,11 +11,11 @@ class Webinse_OfflineStores_Model_System_Config_Source_Status extends Mage_Eav_M
         return array(
             array(
                 'value' => 0,
-                'label' => 'Enabled'
+                'label' => 'Disabled'
             ),
             array(
                 'value' => 1,
-                'label' => 'Disabled'
+                'label' => 'Enabled'
             )
         );
     }

@@ -152,8 +152,8 @@ class Webinse_OfflineStores_Model_Resource_Setup extends Mage_Eav_Model_Entity_S
                             array (
                                 'values' =>
                                     array (
-                                        0 => 'Enable',
-                                        1 => 'Disable',
+                                        0 => 'Disable',
+                                        1 => 'Enable'
                                     ),
                             ),
                     ),
