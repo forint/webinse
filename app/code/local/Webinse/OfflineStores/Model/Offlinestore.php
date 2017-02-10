@@ -420,7 +420,6 @@ class Webinse_OfflineStores_Model_Offlinestore extends Mage_Core_Model_Abstract
     {
         /** Webinse_OfflineStores_Model_Resource_Offlinestore_Collection */
         $_collection = Mage::getResourceModel('webinseofflinestores/offlinestore_collection')
-            // ->setStoreId($this->getStoreId())
             ->addAttributeToSelect('name')
             ->addAttributeToSelect('image')
             ->addAttributeToSelect('short_description')

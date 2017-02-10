@@ -43,11 +43,8 @@ $_offlineStoreCollection  = $this->getLoadedOfflineStoreCollection();
                 <?php endforeach; ?>
             </ol>
             <script type="text/javascript">decorateList('products-list', 'none-recursive')</script>
-
         <?php else: ?>
-
         <?php // Grid Mode ?>
-
         <?php $_collectionSize = $_offlineStoreCollection->count() ?>
         <?php $_columnCount = $this->getColumnCount(); ?>
             <ul class="products-grid products-grid--max-<?php echo $_columnCount; ?>-col">

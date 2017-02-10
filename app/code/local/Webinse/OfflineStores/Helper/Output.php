@@ -138,7 +138,6 @@ class Webinse_OfflineStores_Helper_Output extends Mage_Core_Helper_Abstract
         }
         if ($attribute->getIsHtmlAllowedOnFront() && $attribute->getIsWysiwygEnabled()) {
             if (Mage::helper('webinseofflinestores')->isUrlDirectivesParsingAllowed()) {
-                var_dump($this->_getTemplateProcessor());die;
                 $attributeHtml = $this->_getTemplateProcessor()->filter($attributeHtml);
             }
         }
