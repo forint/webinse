@@ -26,7 +26,7 @@ class Webinse_OfflineStores_Helper_Output extends Mage_Core_Helper_Abstract
     protected function _getTemplateProcessor()
     {
         if (null === $this->_templateProcessor) {
-            $this->_templateProcessor = Mage::helper('catalog')->getPageTemplateProcessor();
+            $this->_templateProcessor = Mage::helper('webinseofflinestores')->getPageTemplateProcessor();
         }
 
         return $this->_templateProcessor;
@@ -137,7 +137,8 @@ class Webinse_OfflineStores_Helper_Output extends Mage_Core_Helper_Abstract
             $attributeHtml = $this->escapeHtml($attributeHtml);
         }
         if ($attribute->getIsHtmlAllowedOnFront() && $attribute->getIsWysiwygEnabled()) {
-            if (Mage::helper('catalog')->isUrlDirectivesParsingAllowed()) {
+            if (Mage::helper('webinseofflinestores')->isUrlDirectivesParsingAllowed()) {
+                var_dump($this->_getTemplateProcessor());die;
                 $attributeHtml = $this->_getTemplateProcessor()->filter($attributeHtml);
             }
         }

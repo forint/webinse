@@ -1,6 +1,9 @@
 <?php
 class Webinse_OfflineStores_Helper_Data extends Mage_Core_Helper_Abstract
 {
+    const XML_PATH_CONTENT_TEMPLATE_FILTER = 'global/offlinestore/content/tempate_filter';
+    const CONFIG_PARSE_URL_DIRECTIVES      = 'offlinestore/frontend/parse_url_directives';
+
     /**
      * Default value for count offline stores in setting
      */
@@ -17,6 +20,30 @@ class Webinse_OfflineStores_Helper_Data extends Mage_Core_Helper_Abstract
      * @var string
      */
     protected $_attributeTabBlock = null;
+
+    /**
+     * Currently selected store ID if applicable
+     *
+     * @var int
+     */
+    protected $_storeId = null;
+
+    public function __construct()
+    {
+        $this->setStoreId(Mage::app()->getStore()->getId());
+    }
+
+    /**
+     * Set a specified store ID value
+     *
+     * @param int $store
+     * @return Webinse_OfflineStores_Helper_Data
+     */
+    public function setStoreId($store)
+    {
+        $this->_storeId = $store;
+        return $this;
+    }
 
     /**
      * Retrieve Attribute Tab Block Name for Offlinestore Edit
@@ -102,5 +129,26 @@ class Webinse_OfflineStores_Helper_Data extends Mage_Core_Helper_Abstract
         } else {
             return $url;
         }
+    }
+
+    /**
+     * Check if the parsing of URL directives is allowed for the offline stores catalog
+     *
+     * @return bool
+     */
+    public function isUrlDirectivesParsingAllowed()
+    {
+        return Mage::getStoreConfigFlag(self::CONFIG_PARSE_URL_DIRECTIVES, $this->_storeId);
+    }
+
+    /**
+     * Retrieve template processor for offline stores catalog content
+     *
+     * @return Varien_Filter_Template
+     */
+    public function getPageTemplateProcessor()
+    {
+        $model = (string)Mage::getConfig()->getNode(self::XML_PATH_CONTENT_TEMPLATE_FILTER);
+        return Mage::getModel($model);
     }
 }

@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
+    <default>
+        <offlinestore>
+            <frontend>
+                <parse_url_directives>1</parse_url_directives>
+            </frontend>
+        </offlinestore>
+    </default>
     <modules>
         <Webinse_OfflineStores>
             <version>1.0.3</version>
@@ -104,6 +111,9 @@
                     <model>webinseofflinestores/offlinestore_url</model>
                 </url>
             </product>
+            <content>
+                <tempate_filter>webinseofflinestores/template_filter</tempate_filter>
+            </content>
         </offlinestore>
     </global>
     <admin>
