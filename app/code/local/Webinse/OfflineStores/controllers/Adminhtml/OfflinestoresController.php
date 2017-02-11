@@ -108,7 +108,7 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
                 'edit'       => $isEdit
             ));
         } else {
-            $this->_redirect('*/*/', array('store'=>$storeId));
+            $this->_redirect('*/*/index', array('store'=>$storeId));
         }
 
     }
@@ -138,7 +138,7 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
      */
     public function massDeleteAction()
     {
-        $offlinestores = $this->getRequest()->getParam('offlinestores', null);
+        $offlinestores = $this->getRequest()->getParam('offlinestore', null);
 
         if (is_array($offlinestores) && sizeof($offlinestores) > 0) {
             try {
@@ -161,7 +161,7 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
      */
     public function massStatusAction()
     {
-        $offlineStoreIds = (array)$this->getRequest()->getParam('offlinestores');
+        $offlineStoreIds = (array)$this->getRequest()->getParam('offlinestore');
         $storeId    = (int)$this->getRequest()->getParam('store', 0);
         $status     = (int)$this->getRequest()->getParam('status');
 

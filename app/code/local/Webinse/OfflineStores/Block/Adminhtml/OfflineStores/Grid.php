@@ -67,7 +67,7 @@ class Webinse_OfflineStores_Block_Adminhtml_OfflineStores_Grid extends Mage_Admi
                 'header' => 'Status',
                 'align' =>'right',
                 'width' => '100px',
-                'index' => 'is_active',
+                'index' => 'status',
                 'type'  => 'options',
                 'options' => Mage::getSingleton('catalog/product_status')->getOptionArray(),
                 'renderer'  =>  'webinseofflinestores/adminhtml_offlinestores_grid_renderer_status'
