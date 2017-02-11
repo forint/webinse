@@ -134,6 +134,59 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
     }
 
     /**
+     *
+     */
+    public function massDeleteAction()
+    {
+        $offlinestores = $this->getRequest()->getParam('offlinestores', null);
+
+        if (is_array($offlinestores) && sizeof($offlinestores) > 0) {
+            try {
+                foreach ($offlinestores as $id) {
+                    Mage::getModel('webinseofflinestores/offlinestore')->setId($id)->delete();
+                }
+                $this->_getSession()->addSuccess($this->__('Total of %d offline store have been deleted', sizeof($offlinestores)));
+            } catch (Exception $e) {
+                $this->_getSession()->addError($e->getMessage());
+            }
+        } else {
+            $this->_getSession()->addError($this->__('Please select offline stores'));
+        }
+        $this->_redirect('*/*');
+    }
+
+    /**
+     * Update product(s) status action
+     *
+     */
+    public function massStatusAction()
+    {
+        $offlineStoreIds = (array)$this->getRequest()->getParam('offlinestores');
+        $storeId    = (int)$this->getRequest()->getParam('store', 0);
+        $status     = (int)$this->getRequest()->getParam('status');
+
+        try {
+            Mage::getSingleton('webinseofflinestores/offlinestore_action')
+                ->updateAttributes($offlineStoreIds, array('status' => $status), $storeId);
+            Mage::dispatchEvent('offline_store_controller_mass_status', array('offlinestore_ids' => $offlineStoreIds));
+
+            $this->_getSession()->addSuccess(
+                $this->__('Total of %d record(s) have been updated.', count($offlineStoreIds))
+            );
+        }
+        catch (Mage_Core_Model_Exception $e) {
+            $this->_getSession()->addError($e->getMessage());
+        } catch (Mage_Core_Exception $e) {
+            $this->_getSession()->addError($e->getMessage());
+        } catch (Exception $e) {
+            $this->_getSession()
+                ->addException($e, $this->__('An error occurred while updating the offline store(s) status.'));
+        }
+
+        $this->_redirect('*/*/', array('store'=> $storeId));
+    }
+
+    /**
      * Validate method
      */
     public function validateAction()
@@ -370,4 +423,6 @@ class Webinse_OfflineStores_Adminhtml_OfflinestoresController extends Mage_Admin
         ));
         $this->getResponse()->setBody($content->toHtml());
     }
+
+
 }

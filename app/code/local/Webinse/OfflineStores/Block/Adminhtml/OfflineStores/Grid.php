@@ -70,6 +70,7 @@ class Webinse_OfflineStores_Block_Adminhtml_OfflineStores_Grid extends Mage_Admi
                 'index' => 'is_active',
                 'type'  => 'options',
                 'options' => Mage::getSingleton('catalog/product_status')->getOptionArray(),
+                'renderer'  =>  'webinseofflinestores/adminhtml_offlinestores_grid_renderer_status'
             ));
 
         $this->addColumn('action',
@@ -98,39 +99,39 @@ class Webinse_OfflineStores_Block_Adminhtml_OfflineStores_Grid extends Mage_Admi
     protected function _prepareMassaction()
     {
         $this->setMassactionIdField('entity_id');
-        $this->getMassactionBlock()->setFormFieldName('product');
+        $this->getMassactionBlock()->setFormFieldName('offlinestore');
 
         $this->getMassactionBlock()->addItem('delete', array(
-            'label'=> Mage::helper('catalog')->__('Delete'),
+            'label'=> Mage::helper('webinseofflinestores')->__('Delete'),
             'url'  => $this->getUrl('*/*/massDelete'),
-            'confirm' => Mage::helper('catalog')->__('Are you sure?')
+            'confirm' => Mage::helper('webinseofflinestores')->__('Are you sure?')
         ));
 
-        $statuses = Mage::getSingleton('catalog/product_status')->getOptionArray();
+        $statuses = Mage::getSingleton('webinseofflinestores/system_config_source_status')->getAllOptions();
 
         array_unshift($statuses, array('label'=>'', 'value'=>''));
         $this->getMassactionBlock()->addItem('status', array(
-            'label'=> Mage::helper('catalog')->__('Change status'),
+            'label'=> Mage::helper('webinseofflinestores')->__('Change status'),
             'url'  => $this->getUrl('*/*/massStatus', array('_current'=>true)),
             'additional' => array(
                 'visibility' => array(
                     'name' => 'status',
                     'type' => 'select',
                     'class' => 'required-entry',
-                    'label' => Mage::helper('catalog')->__('Status'),
+                    'label' => Mage::helper('webinseofflinestores')->__('Status'),
                     'values' => $statuses
                 )
             )
         ));
 
-        if (Mage::getSingleton('admin/session')->isAllowed('catalog/update_attributes')){
-            $this->getMassactionBlock()->addItem('attributes', array(
-                'label' => Mage::helper('catalog')->__('Update Attributes'),
-                'url'   => $this->getUrl('*/catalog_product_action_attribute/edit', array('_current'=>true))
-            ));
-        }
+        //if (Mage::getSingleton('admin/session')->isAllowed('catalog/update_attributes')){
+        //    $this->getMassactionBlock()->addItem('attributes', array(
+        //        'label' => Mage::helper('catalog')->__('Update Attributes'),
+        //        'url'   => $this->getUrl('*/catalog_product_action_attribute/edit', array('_current'=>true))
+        //    ));
+        //}
 
-        Mage::dispatchEvent('adminhtml_catalog_product_grid_prepare_massaction', array('block' => $this));
+        Mage::dispatchEvent('adminhtml_offline_store_grid_prepare_massaction', array('block' => $this));
         return $this;
     }
 
