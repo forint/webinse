@@ -232,5 +232,33 @@ class Webinse_OfflineStores_Model_Resource_Offlinestore extends Mage_Eav_Model_E
         return $this->_getWriteAdapter()->fetchPairs($select, $bind);
     }
 
+    /**
+     * Need override this method for exclude insert new attribute values
+     *
+     * @return Webinse_OfflineStores_Model_Resource_Offlinestore
+     */
+    protected function _updateAttribute($object, $attribute, $valueId, $value)
+    {
+        $table = $attribute->getBackend()->getTable();
+        if (!isset($this->_attributeValuesToSave[$table])) {
+            $this->_attributeValuesToSave[$table] = array();
+        }
 
+        $entityIdField = $attribute->getBackend()->getEntityIdField();
+
+        $data   = array(
+            'entity_type_id'    => $object->getEntityTypeId(),
+            $entityIdField      => $object->getId(),
+            'attribute_id'      => $attribute->getId(),
+            'value'             => $this->_prepareValueForSave($value, $attribute)
+        );
+        if ($valueId)
+        {
+            $data['value_id'] = $valueId;
+        }
+
+        $this->_attributeValuesToSave[$table][] = $data;
+
+        return $this;
+    }
 }
